@@ -39,6 +39,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
+app.io.set('transports',['xhr-polling']);
 
 // development only
 if ('development' == app.get('env')) {
