@@ -15,6 +15,7 @@ var passport = require('passport'),
     ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn;
 
 var config = require('./config');
+var players = require('./players');
 
 // all environments
 app.set('port', process.env.PORT || 31759);

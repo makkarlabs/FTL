@@ -12,5 +12,5 @@ exports.login = function(req, res){
 };
 
 exports.pick = function(req, res){
-  res.render('pick', {title: 'Fantasy Tweet League | Choose your Players'});
+  res.render('pick', {title: 'Fantasy Tweet League | Choose your Players', players: players});
 };
