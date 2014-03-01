@@ -12,8 +12,12 @@ $(document).ready(function() {
 
         io.on('newtweet', function(data){
             console.log(data.id+","+data.name);
-            var count = $('.' + data.id).html();
-            $('.' + data.id).html(count++);
+            var count = $('.' + data.id);
+            for each(var ele in count) {
+                var temp = ele.html();
+                ele.html(temp++);
+            }
+            /*$('.' + data.id).html(count++);*/
         });
     });
 
