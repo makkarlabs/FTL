@@ -12,6 +12,7 @@
     "ntwitter": "*",
     "passport": "*",
     "passport-twitter": "*",
-    "connect-ensure-login": "*"
+    "connect-ensure-login": "*",
+    "mongodb":"*"
   }
 }
