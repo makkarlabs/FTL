@@ -31,26 +31,32 @@ $(document).ready(function() {
         var t2p3 = $('#t2p3s').html();
         var t1p4 = $('#t1p4s').html();
         var t2p4 = $('#t2p4s').html();
+
         if(t1p0 > t2p0)
             t1S++;
         else if(t1p0 < t2p0)
             t2S++;
+        
         if(t1p1 > t2p1)
             t1S++;
         else if(t1p1 < t2p1)
             t2S++;
+        
         if(t1p2 > t2p2)
             t1S++;
         else if(t1p2 < t2p2)
             t2S++;
+        
         if(t1p3 > t2p3)
             t1S++;
         else if(t1p3 < t2p3)
             t2S++;
+        
         if(t1p4 > t2p4)
             t1S++;
         else if(t1p4 < t2p4)
             t2S++;
+        
         var text = t1S + ' - ' + t2S;
         if(t1S < t2S)
             $('#banner').html('You Lost ' + text);
