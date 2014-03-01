@@ -40,7 +40,8 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.index);
 app.get('/login', routes.login);
-app.get('/pick', routes.pick)
+app.get('/dash', routes.dash)
+app.get('/pick', routes.pick);
 
 /*mongo.connect("mongodb://localhost:27017/ftl", function(err, db) {
   if(!err) {
