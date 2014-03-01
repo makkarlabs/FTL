@@ -6,3 +6,7 @@
 exports.index = function(req, res){
   res.render('index', { title: 'Fantasy Tweet League' });
 };
+
+exports.login = function(req, res){
+  res.render('login', { title: 'Fantasy Tweet League | Login with Twitter' });
+};

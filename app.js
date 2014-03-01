@@ -11,6 +11,12 @@ var path = require('path');
 
 var app = express();
 
+var passport = require('passport'),
+    TwitterStrategy = require('passport-twitter').Strategy,
+    ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn;
+
+var config = require('./config');
+
 // all environments
 app.set('port', process.env.PORT || 31759);
 app.set('views', path.join(__dirname, 'views'));
@@ -31,8 +37,30 @@ if ('development' == app.get('env')) {
 }
 
 app.get('/', routes.index);
-app.get('/users', user.list);
+app.get('/login', routes.login);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
+
+
+// Passport Twitter
+// OAuth login
+var TWITTER_CONSUMER_KEY = config.TWITTER_CONSUMER_KEY;
+var TWITTER_CONSUMER_SECRET = config.TWITTER_CONSUMER_SECRET;
+
+passport.use(new TwitterStrategy({
+    consumerKey: TWITTER_CONSUMER_KEY,
+    consumerSecret: TWITTER_CONSUMER_SECRET,
+    callbackURL: "http://127.0.0.1:" + app.get('port') + "/auth/twitter/callback"
+  },
+  function(token, tokenSecret, profile, done) {
+    // NOTE: You'll probably want to associate the Twitter profile with a
+    //       user record in your application's DB.
+    var user = profile;
+    return done(null, user);
+  }
+));
+
+app.get('/auth/twitter', passport.authenticate('twitter'));
+app.get('/auth/twitter/callback', passport.authenticate('twitter', { successReturnToOrRedirect: '/', failureRedirect: '/login' }));
