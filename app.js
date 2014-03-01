@@ -72,6 +72,7 @@ passport.use(new TwitterStrategy({
     callbackURL: "http://127.0.0.1:" + app.get('port') + "/auth/twitter/callback"
   },
   function(token, tokenSecret, profile, done) {
+    var this_user = {};
     // NOTE: You'll probably want to associate the Twitter profile with a
     //       user record in your application's DB.    
     mongo.connect(DB_HOSTNAME, function(err, db) {
@@ -81,17 +82,18 @@ passport.use(new TwitterStrategy({
 
       collection.find({id:profile.id}).toArray(function(err, items) {
           if(items.length == 0) {
-            var this_user = {id: profile.id, username: profile.username, displayName: profile.displayName, team = []};
+            this_user = {id: profile.id, username: profile.username, displayName: profile.displayName, team = []};
             if(profile.photos.length > 0) {
               this_user.photo = profile.photos[0]["value"];
             } 
             collection.insert(this_user,{w:1}, function(err, result) {});
           } else {
-            var this_user = {username: profile.username, displayName: profile.displayName};
+            this_user = {username: profile.username, displayName: profile.displayName};
             if(profile.photos.length > 0) {
               this_user.photo = profile.photos[0]["value"];
             } 
             collection.update({id:profile.id}, {$set:this_user}, {w:1}, function(err, result) {});
+            this_user.id = profile.id;
           }
       });
       
@@ -100,7 +102,7 @@ passport.use(new TwitterStrategy({
     }
 });
 
-    return done(null, user);
+    return done(null, this_user);
   }
 ));
 
