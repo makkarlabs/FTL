@@ -1,8 +1,11 @@
 /*
  * GET home page.
  */
+var config = require('../config');
+var mongo = require('mongodb').MongoClient;
 
 var players = require('../players');
+var updateUser = require('../app');
 
 exports.index = function(req, res){
   res.render('index', { title: 'Fantasy Tweet League' });
@@ -21,17 +24,45 @@ exports.afterlogin = function(req, res){
   if (req.user.team.length == 0)
   	res.redirect('/pick');
   else
-  	res.redirect('/dash');
+  	res.redirect('/wait');
 };
 
 exports.dash = function(req, res){
-
 };
 
 exports.wait = function(req, res){
 	if(req.user.team.length == 0) {
 		res.redirect('/pick');
 	} else {
-		res.render('wait')
+		res.render('wait');
 	}
 };
+
+exports.teamselect = function(req, res){	
+	if(req.user.team.length == 0) {
+		if(req.body.players.length == 8) {
+			var newteam = [];
+			for(var i in req.body.players){
+				newteam.push(players.players[+req.body.players[i] - 1]);
+			}			
+			req.user.team = newteam;
+			mongo.connect(config.DB_HOSTNAME, function(err, db) {
+		      if(!err) {		           
+			        var collection = db.collection('user');
+			        collection.find({id:req.user.id}).toArray(function(err, items) { 			        	
+			        	var this_user = items[0];
+			        	this_user.team = req.user.team;
+			        	console.log(this_user);
+			        	collection.update({id:req.user.id}, {$set:{team: this_user.team}}, {w:1}, function(err, result) {});
+			        });
+		    	}
+			});
+		}
+		res.redirect('/wait')
+	} else {
+		res.redirect('/wait');
+	}
+ }
+
+
+
