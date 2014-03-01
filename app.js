@@ -43,23 +43,6 @@ app.get('/login', routes.login);
 app.get('/dash', routes.dash)
 app.get('/pick', routes.pick);
 
-/*mongo.connect("mongodb://localhost:27017/ftl", function(err, db) {
-  if(!err) {
-    console.log("We are connected to mongo! ");
-    
-    var collection = db.collection('test');
-    var docs = [{mykey:1, another:23}, {mykey:2, another:22}, {mykey:3, another:23}];
-    collection.insert(docs, {w:1}, function(err, result) {});
-    collection.find({another:23}).toArray(function(err, items) {
-        console.log(items);
-    });
-    
-  } else  {
-    console.log("some problem with the db");
-  }
-
-});*/
-
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
@@ -69,13 +52,19 @@ http.createServer(app).listen(app.get('port'), function(){
 // OAuth login
 var TWITTER_CONSUMER_KEY = config.TWITTER_CONSUMER_KEY;
 var TWITTER_CONSUMER_SECRET = config.TWITTER_CONSUMER_SECRET;
+var DB_HOSTNAME = config.DB_HOSTNAME;
 
 passport.serializeUser(function(user, done) {
-  done(null, user);
+  done(null, user.id);
 });
  
 passport.deserializeUser(function(obj, done) {
-  done(null, obj);
+  mongo.connect(DB_HOSTNAME, function(err, db) {
+    var collection = db.collection('user');
+    collection.find({id:obj}).toArray(function(err, items) {
+       done(null, items[0])
+    });
+  });  
 });
 
 passport.use(new TwitterStrategy({
@@ -85,35 +74,31 @@ passport.use(new TwitterStrategy({
   },
   function(token, tokenSecret, profile, done) {
     // NOTE: You'll probably want to associate the Twitter profile with a
-    //       user record in your application's DB.
-    var user = profile;
-    mongo.connect("mongodb://localhost:27017/ftl", function(err, db) {
-  if(!err) {
-       
-    var collection = db.collection('user');
+    //       user record in your application's DB.    
+    mongo.connect(DB_HOSTNAME, function(err, db) {
+    if(!err) {
+         
+      var collection = db.collection('user');
 
-    collection.find({id:profile.id}).toArray(function(err, items) {
-        if(items.length == 0) {
-          var this_user = {id: profile.id, username: profile.username, displayName: profile.displayName};
-          if(profile.photos.length > 0) {
-            this_user.photo = profile.photos[0]["value"];
-          } 
-          collection.insert(this_user,{w:1}, function(err, result) {});
-        } else {
-
-          var this_user = {username: profile.username, displayName: profile.displayName};
-          if(profile.photos.length > 0) {
-            this_user.photo = profile.photos[0]["value"];
-          } 
-          collection.update({id:profile.id}, {$set:this_user}, {w:1}, function(err, result) {});
-
-        }
-    });
-    
-  } else  {
-    console.log("some problem with the db");
-  }
-
+      collection.find({id:profile.id}).toArray(function(err, items) {
+          if(items.length == 0) {
+            var this_user = {id: profile.id, username: profile.username, displayName: profile.displayName, team = []};
+            if(profile.photos.length > 0) {
+              this_user.photo = profile.photos[0]["value"];
+            } 
+            collection.insert(this_user,{w:1}, function(err, result) {});
+          } else {
+            var this_user = {username: profile.username, displayName: profile.displayName};
+            if(profile.photos.length > 0) {
+              this_user.photo = profile.photos[0]["value"];
+            } 
+            collection.update({id:profile.id}, {$set:this_user}, {w:1}, function(err, result) {});
+          }
+      });
+      
+    } else  {
+      console.log("some problem with the db");
+    }
 });
 
     return done(null, user);
@@ -121,4 +106,4 @@ passport.use(new TwitterStrategy({
 ));
 
 app.get('/auth/twitter', passport.authenticate('twitter'));
-app.get('/auth/twitter/callback', passport.authenticate('twitter', { successReturnToOrRedirect: '/', failureRedirect: '/login' }));
+app.get('/auth/twitter/callback', passport.authenticate('twitter', { successReturnToOrRedirect: '/afterlogin', failureRedirect: '/login' }));
