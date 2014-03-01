@@ -14,8 +14,43 @@ a {
   text-align: center;
 }
 
+.playerIcon: hover {
+  cursor: pointer;
+}
+
 .playerIcon img {
   width: 80px;
   height: 80px;
   border-radius: 40px;
+  opacity: 0.8;
+}
+
+.playerIcon img:hover {
+  opacity: 1.0;
+}
+
+.gameIcon {
+  border: 1px solid black;
+  width: 120px;
+  height: 120px;
+  text-align: center;
+}
+
+.gameIcon: hover {
+  cursor: pointer;
+}
+
+.gameIcon img {
+  width: 80px;
+  height: 80px;
+  border-radius: 40px;
+  opacity: 0.8;
+}
+
+.gameIcon img:hover {
+  opacity: 1.0;
+}
+
+.gameSpace {
+
 }

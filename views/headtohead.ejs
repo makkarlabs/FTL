@@ -1,0 +1,27 @@
+<% include head.ejs %>
+
+<% include header.ejs %>
+
+    <div class="container">
+        <div class="row">
+            <div id="banner"></div>
+        </div>
+        <div class="row">
+            <div class="col-md-offset-3 col-md-6" class="gameSpace">
+                <% for(i=0; i<5; i++) { %>
+                <div class="gameIcon" id="t1p<%= i %>">
+                    <img src="<%= user.team[i].pic %>"/>
+                    <p><%= user.team[i].name %></p>
+                    <p id="t1p<%= i %>s"></p>
+                </div>
+                <div class="gameIcon" id="t2p<%= i %>">
+                    <img src="<%= opponent.team[i].pic %>"/>
+                    <p><%= opponent.team[i].name %></p>
+                    <p id="t2p<%= i %>s"></p>
+                </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+
+<% include footer.ejs %>
