@@ -1,44 +1,133 @@
 <% include head.ejs %>
 
 <% include header.ejs %>
+
     <div class="container">
+        <div class="row">
+            <div class="col-md-12 selectCont">
+                <h3>My Starting 5</h3>
+                <% for(var i=0; i<5; i++) { %>
+                <a>
+                    <div id="<%= i %>" class="player-selected">
+                        <img class="img-circle" src="" /> 
+                        <div class="player-name col-md-11"></div>
+                        <div class="player-cost col-md-1"></div>
+                    </div>
+                </a>
+                <% } %>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12 financeData">
+                <button id="battle" class="btn btn-primary">Pick Team</button>
+            </div>
+        </div>
+
+        <form action="/chooseSquad" method="post" id="player-form">
+            <input type="hidden" name="players" id="1" />
+            <input type="hidden" name="players" id="2" />
+            <input type="hidden" name="players" id="3" />
+            <input type="hidden" name="players" id="4" />
+            <input type="hidden" name="players" id="5" />
+            <input type="hidden" name="players" id="6" />
+            <input type="hidden" name="players" id="7" />
+            <input type="hidden" name="players" id="8" />
+        </form>
+
         <div class="row">
             <div class="col-md-12">
                 <h3 class="center">My Squad</h3>
                 <% for(var i=0; i<8; i++) { %>
                 <a>
-                    <div id="<%= players[i].id %>" class="player-unselected">
-                        <img class="img-circle" src="<%= players[i].pic %>" /> 
-                        <div class="player-name col-md-11"><%= players[i].name %></div>
-                        <div class="player-cost col-md-1"><%= players[i].cost %></div>
+                    <div id="<%= user.team[i].id %>" class="player-unselected">
+                        <img class="img-circle" src="<%= user.team[i].pic %>" /> 
+                        <div class="player-name col-md-11"><%= user.team[i].name %></div>
+                        <div class="player-cost col-md-1"><%= user.team[i].cost %></div>
                     </div>
                 </a>
                 <% } %>
             </div>
         </div>
     </div>
-    <!-- <div class="container">
-        <div class="row">
-        <% for(i=0; i<4; i++) { %>
-            <div class="col-md-3">
-                <div class="playerIcon">
-                    <img src="<%= user.team[i].pic %>" />
-                    <p><%= user.team[i].name %></p>
-                </div>
-            </div>
-        <% } %>
-        </div>
 
-        <div class="row">
-        <% for(i=4; i<8; i++) { %>
-            <div class="col-md-3">
-                <div class="playerIcon">
-                    <img src="<%= user.team[i].pic %>" />
-                    <p><%= user.team[i].name %></p>
-                </div>
-            </div>
-        <% } %>
-        </div>
-    </div> -->
+    <script type="text/javascript">
+        $(function() {
+            var selectionCounter = 0, nextEmpty = -1;
+
+            $(".player-selected").hide();
+            $(".player-unselected").click(function(){
+
+                if(selectionCounter<5){
+                    var id = $(this).attr('id');
+                    var imageSrc = $(this).find("img").attr("src");
+                    var playerName = $(this).find(".player-name").html();
+                    var playerCost = $(this).find(".player-cost").html();
+                    
+                    var findNext = -1, tempNext = -1;
+                    while(tempNext===-1){
+                        findNext++;
+                        if(findNext>=8){
+                            findNext = 0;
+                        }
+                        var playerid = $("#"+findNext+".player-selected").attr("player-id");
+                        if(playerid===undefined || playerid===null || playerid===""){
+                            tempNext = findNext;
+                        }
+                    }
+                    nextEmpty=tempNext;
+                   
+                    $("#"+nextEmpty+".player-selected").show();
+                    $("#"+nextEmpty+".player-selected").attr("player-id", id);
+                    $("#"+nextEmpty+".player-selected img").attr("src", imageSrc);
+                    $("#"+nextEmpty+".player-selected .player-name").html(playerName);
+                    $("#"+nextEmpty+".player-selected .player-cost").html(playerCost);
+
+                    selectionCounter++;
+                    $(this).closest("a").hide();
+                }
+                else{
+                    alert("You have already chosen 5 players");
+                }
+
+            });
+            $(".player-selected").click(function(){
+                var playerId = $(this).attr("player-id");
+                $("#"+playerId+".player-unselected").closest("a").show();
+                
+                selectionCounter--;
+                var cost =  +$(this).find(".player-cost").html();
+
+                console.log("Now nextEmpty"+nextEmpty)
+                $(this).find("img").attr("src","");
+                $(this).find("img").removeClass("img-circle").addClass("img-circle");
+                $(this).find(".player-name").html("");
+                $(this).find(".player-cost").html("");
+
+                $(this).attr("player-id","");
+
+            });
+            $("#battle").click(function(){
+                if(selectionCounter<5){
+                    alert('Choose 5 players to complete the selection');
+                }
+                else{
+                    for(var i=0;i<5;i++){
+                        var value = $("#"+i+".player-selected").attr("player-id");
+                        var formid = i+1;
+                        $("#player-form #"+formid).val(value);
+                    }
+                    var j = 3;
+                    while(j--) {
+                        var value = $("#"+i+".player-selected").attr("player-id");
+                        formid = i+1;
+                        i++;
+                        $("#player-form #"+formid).val(value);
+                    }
+                    $("#player-form").submit();
+                }
+            });
+        });
+    </script>
 
 <% include footer.ejs %>

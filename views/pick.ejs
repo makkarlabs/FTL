@@ -1,11 +1,12 @@
 <% include head.ejs %>
 
 <% include header.ejs %>
+
     <div class="container">
         <div class="row">
             <div class="col-md-12 selectCont">
                 <h3>Your Team</h3>
-                <% for(var i=0; i<8; i++) {%>
+                <% for(var i=0; i<8; i++) { %>
                 <a>
                     <div id="<%= i %>" class="player-selected">
                         <img class="img-circle" src="" /> 
@@ -34,6 +35,7 @@
             <input type="hidden" name="players" id="6" />
             <input type="hidden" name="players" id="7" />
             <input type="hidden" name="players" id="8" />
+            <input type="hidden" name="budget" id="budget" />
         </form>
 
         <div class="row">
@@ -135,6 +137,7 @@
                     var formid = i+1;
                     $("#player-form #"+formid).val(value);
                 }
+                $("#player-form #budget").val(userTotal);
                 $("#player-form").submit();
             }
         });
