@@ -1,5 +1,7 @@
-$(document).ready(function() {
     var io = io.connect();
+
+
+$(document).ready(function() {
     io.emit('ready');
 
     io.on('startgame', function(data){
@@ -12,11 +14,11 @@ $(document).ready(function() {
 
         io.on('newtweet', function(data){
             console.log(data.id+","+data.name);
-            var count = $('.' + data.id).html();
-            $('.' + data.id).html(count++);
+            var count = $('.s' + data.id).html();
+            count++;
+            $('.s' + data.id).html(count);
         });
     });
-
     function post_match() {
         var t1S = 0, t2S = 0;
         var t1p0 = $('#t1p0s').html();

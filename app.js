@@ -242,7 +242,7 @@ app.io.route('ready', function(req) {
     }
 
     rooms[rno].broadcast('startgame');
-    rooms[rno].timer = 10;
+    rooms[rno].timer = 60;
     rooms[rno].broadcast('timer',{time: rooms[rno].timer});
     setTimeout(function(){counter(rooms[rno]);},1000);
   }

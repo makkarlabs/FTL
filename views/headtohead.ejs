@@ -19,12 +19,12 @@
                     <div class="gameIcon pull-left" id="t1p<%= i %>">
                         <img class="img-circle" src="<%= user.team[i].pic %>"/>
                         <div class="player-name"><%= user.team[i].name %></div>
-                        <div class="player-count <%= user.team[i].id %>" id="t1p<%= i %>s">0</div>
+                        <div class="player-count s<%= user.team[i].id %>" id="t1p<%= i %>s">0</div>
                     </div>
                     <div class="gameIcon pull-right" id="t2p<%= i %>">
                         <img class="img-circle" src="<%= opponent.team[i].pic %>"/>
                         <div class="player-name"><%= opponent.team[i].name %></div>
-                        <div class="player-count <%= opponent.team[i].id %>" id="t2p<%= i %>s">0</div>
+                        <div class="player-count s<%= opponent.team[i].id %>" id="t2p<%= i %>s">0</div>
                     </div>
                 </div>
                 <% } %>
