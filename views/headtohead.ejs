@@ -1,5 +1,8 @@
 <% include head.ejs %>
 
+<script src="/socket.io/socket.io.js"></script>
+<script src="/javascripts/battlesock.js"></script>
+
 <% include header.ejs %>
 
     <div class="container">
@@ -12,12 +15,12 @@
                 <div class="gameIcon" id="t1p<%= i %>">
                     <img src="<%= user.team[i].pic %>"/>
                     <p><%= user.team[i].name %></p>
-                    <p id="t1p<%= i %>s"></p>
+                    <p id="t1p<%= i %>s">0</p>
                 </div>
                 <div class="gameIcon" id="t2p<%= i %>">
                     <img src="<%= opponent.team[i].pic %>"/>
                     <p><%= opponent.team[i].name %></p>
-                    <p id="t2p<%= i %>s"></p>
+                    <p id="t2p<%= i %>s">0</p>
                 </div>
                 <% } %>
             </div>
