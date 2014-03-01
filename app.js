@@ -1,11 +1,9 @@
-
 /**
  * Module dependencies.
  */
 
 var express = require('express');
 var routes = require('./routes');
-var user = require('./routes/user');
 var http = require('http');
 var path = require('path');
 
@@ -26,8 +24,10 @@ app.use(express.logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(express.methodOverride());
-app.use(express.cookieParser('your secret here'));
+app.use(express.cookieParser('yoyodude'));
 app.use(express.session());
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -48,6 +48,14 @@ http.createServer(app).listen(app.get('port'), function(){
 // OAuth login
 var TWITTER_CONSUMER_KEY = config.TWITTER_CONSUMER_KEY;
 var TWITTER_CONSUMER_SECRET = config.TWITTER_CONSUMER_SECRET;
+
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+ 
+passport.deserializeUser(function(obj, done) {
+  done(null, obj);
+});
 
 passport.use(new TwitterStrategy({
     consumerKey: TWITTER_CONSUMER_KEY,
