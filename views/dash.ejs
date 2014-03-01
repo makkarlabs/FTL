@@ -1,16 +1,28 @@
 <% include head.ejs %>
 
 <% include header.ejs %>
-
+   <p> <%=players.length  %></p>
     <div class="container">
         <div class="row">
-            <div class="col-xs-3 col-md-3">
-            <img src="" />
+        <% for(i=0; i<4; i++) { %>
+            <div class="col-md-3">
+                <div class="playerIcon">
+                    <img src="<%= user.team[i].pic %>" />
+                    <p><%= user.team[i].name %></p>
+                </div>
             </div>
+        <% } %>
         </div>
+
         <div class="row">
-            <div class="col-md-offset-3 col-md-9 col-xs-offset-3 col-md-9">
+        <% for(i=4; i<8; i++) { %>
+            <div class="col-md-3">
+                <div class="playerIcon">
+                    <img src="<%= user.team[i].pic %>" />
+                    <p><%= user.team[i].name %></p>
+                </div>
             </div>
+        <% } %>
         </div>
     </div>
 
