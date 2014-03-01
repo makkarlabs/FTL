@@ -40,7 +40,9 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.index);
 app.get('/login', routes.login);
-app.get('/pick', routes.pick)
+app.get('/dash', routes.dash);
+app.get('/pick', routes.pick);
+app.get('/afterlogin', ensureLoggedIn('/login'), routes.afterlogin)
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
@@ -54,16 +56,11 @@ var TWITTER_CONSUMER_SECRET = config.TWITTER_CONSUMER_SECRET;
 var DB_HOSTNAME = config.DB_HOSTNAME;
 
 passport.serializeUser(function(user, done) {
-  done(null, user.id);
+  done(null, user);
 });
  
-passport.deserializeUser(function(obj, done) {
-  mongo.connect(DB_HOSTNAME, function(err, db) {
-    var collection = db.collection('user');
-    collection.find({id:obj}).toArray(function(err, items) {
-       done(null, items[0])
-    });
-  });  
+passport.deserializeUser(function(user, done) {
+  done(null, user);
 });
 
 passport.use(new TwitterStrategy({
@@ -72,7 +69,7 @@ passport.use(new TwitterStrategy({
     callbackURL: "http://127.0.0.1:" + app.get('port') + "/auth/twitter/callback"
   },
   function(token, tokenSecret, profile, done) {
-    var this_user = {};
+    var this_user;
     // NOTE: You'll probably want to associate the Twitter profile with a
     //       user record in your application's DB.    
     mongo.connect(DB_HOSTNAME, function(err, db) {
@@ -82,18 +79,21 @@ passport.use(new TwitterStrategy({
 
       collection.find({id:profile.id}).toArray(function(err, items) {
           if(items.length == 0) {
-            this_user = {id: profile.id, username: profile.username, displayName: profile.displayName, team = []};
+            this_user = {id: profile.id, username: profile.username, displayName: profile.displayName, team: []};
             if(profile.photos.length > 0) {
               this_user.photo = profile.photos[0]["value"];
             } 
             collection.insert(this_user,{w:1}, function(err, result) {});
+            done(null, this_user)
           } else {
-            this_user = {username: profile.username, displayName: profile.displayName};
+            this_user = items[0];
+            this_user.username = profile.username;
+            this_user.displayName = profile.displayName;            
             if(profile.photos.length > 0) {
               this_user.photo = profile.photos[0]["value"];
             } 
-            collection.update({id:profile.id}, {$set:this_user}, {w:1}, function(err, result) {});
-            this_user.id = profile.id;
+            collection.update({id:profile.id}, {$set:this_user}, {w:1}, function(err, result) {});         
+            done(null, this_user)   
           }
       });
       
@@ -101,8 +101,7 @@ passport.use(new TwitterStrategy({
       console.log("some problem with the db");
     }
 });
-
-    return done(null, this_user);
+    console.log(this_user);
   }
 ));
 

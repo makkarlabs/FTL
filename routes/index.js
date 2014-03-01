@@ -12,5 +12,17 @@ exports.login = function(req, res){
 };
 
 exports.pick = function(req, res){
-  res.render('pick', {title: 'Fantasy Tweet League | Choose your Players', players: players});
+  res.render('pick', {title: 'Fantasy Tweet League | Choose your Players'});
+};
+
+exports.afterlogin = function(req, res){
+  console.log(req.user);
+  if (req.user.team.length == 0)
+  	res.redirect('/pick');
+  else
+  	res.redirect('/dash');
+};
+
+exports.dash = function(req, res){
+
 };
