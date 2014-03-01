@@ -82,7 +82,7 @@ passport.use(new TwitterStrategy({
 
       collection.find({id:profile.id}).toArray(function(err, items) {
           if(items.length == 0) {
-            var this_user = {id: profile.id, username: profile.username, displayName: profile.displayName, team = []};
+            var this_user = {id: profile.id, username: profile.username, displayName: profile.displayName, team: []};
             if(profile.photos.length > 0) {
               this_user.photo = profile.photos[0]["value"];
             } 
@@ -101,7 +101,7 @@ passport.use(new TwitterStrategy({
     }
 });
 
-    return done(null, user);
+    return done(null, this_user);
   }
 ));
 
