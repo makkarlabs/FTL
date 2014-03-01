@@ -165,6 +165,8 @@ function counter(data) {
     data.gameover = true;
     var p1s = 0;
     var p2s = 0;
+
+    data.broadcast('gameover',{});
     console.log("GAME OVER!!");
     console.log(data.p1points);
     console.log(data.p2points);
