@@ -8,6 +8,7 @@ var routes = require('./routes');
 var user = require('./routes/user');
 var http = require('http');
 var path = require('path');
+var mongo = require('mongodb').MongoClient;
 
 var app = express();
 
@@ -32,6 +33,23 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.index);
 app.get('/users', user.list);
+
+mongo.connect("mongodb://localhost:27017/ftl", function(err, db) {
+  if(!err) {
+    console.log("We are connected to mongo! ");
+    
+    var collection = db.collection('test');
+    var docs = [{mykey:1, another:23}, {mykey:2, another:22}, {mykey:3, another:23}];
+    collection.insert(docs, {w:1}, function(err, result) {});
+    collection.find({another:23}).toArray(function(err, items) {
+        console.log(items);
+    });
+    
+  } else  {
+    console.log("some problem with the db");
+  }
+
+});
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
