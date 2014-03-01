@@ -8,8 +8,6 @@ $(document).ready(function() {
         io.on('timer', function(data){
             $('#banner').html(data.time);
             console.log("time remaining "+data.time);
-            if(data.time == 0)
-                post_match();
         });
 
         io.on('newtweet', function(data){
@@ -18,20 +16,40 @@ $(document).ready(function() {
             count++;
             $('.s' + data.id).html(count);
         });
+
+        io.on('gameover', function(data){
+            post_match();
+        });
     });
     function post_match() {
         var t1S = 0, t2S = 0;
-        var t1p0 = $('#t1p0s').html();
-        var t2p0 = $('#t2p0s').html();
-        var t1p1 = $('#t1p1s').html();
-        var t2p1 = $('#t2p1s').html();
-        var t1p2 = $('#t1p2s').html();
-        var t2p2 = $('#t2p2s').html();
-        var t1p3 = $('#t1p3s').html();
-        var t2p3 = $('#t2p3s').html();
-        var t1p4 = $('#t1p4s').html();
-        var t2p4 = $('#t2p4s').html();
+        var t1p0 = +$('#t1p0s').html();
+        var t2p0 = +$('#t2p0s').html();
+        var t1p1 = +$('#t1p1s').html();
+        var t2p1 = +$('#t2p1s').html();
+        var t1p2 = +$('#t1p2s').html();
+        var t2p2 = +$('#t2p2s').html();
+        var t1p3 = +$('#t1p3s').html();
+        var t2p3 = +$('#t2p3s').html();
+        var t1p4 = +$('#t1p4s').html();
+        var t2p4 = +$('#t2p4s').html();
 
+        console.log("zzzzzzzzzzzzzzzzzzzzzz");
+
+        console.log(t1p0);
+        console.log(t2p0);
+        console.log(t1p1);
+        console.log(t2p1);
+        console.log(t1p2);
+        console.log(t2p2);
+        console.log(t1p3);
+        console.log(t2p3);
+        console.log(t1p4);
+        console.log(t2p4);
+
+        console.log( t1p0 - t2p0 );
+
+        console.log("zzzzzzzzzzzzzzzzzzzzzz")
         if(t1p0 > t2p0)
             t1S++;
         else if(t1p0 < t2p0)
