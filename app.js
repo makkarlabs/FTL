@@ -52,6 +52,7 @@ app.get('/pick', routes.pick);
 app.get('/afterlogin', ensureLoggedIn('/login'), routes.afterlogin);
 app.get('/wait', ensureLoggedIn('/login'), routes.wait);
 app.post('/teamSelect', ensureLoggedIn('/login'), routes.teamselect);
+app.get('/leaderboard', routes.leaderboard);
 app.post('/battle', ensureLoggedIn('login'), function(req, res) {
   var this_room = rooms[+req.body.room];
   req.session.rno = +req.body.room;
@@ -144,7 +145,7 @@ app.io.route('imwaiting', function(req){
     console.log("starting....");
     var rno = rooms.length;
     //req.io.join('r'+rno);
-    rooms.push({p1req: req, p2req: userWaiting,p1ready: false, p2ready: false, gameover:false});
+    rooms.push({p1req: req, p2req: userWaiting,p1ready: false, p2ready: false, gameover:false, p1points: [0,0,0,0,0], p2points: [0,0,0,0,0]});
 
     req.io.emit('joinroom', {roomno: rno, player: 1});
     userWaiting.io.emit('joinroom', {roomno: rno, player: 2});
@@ -158,9 +159,46 @@ app.io.route('imwaiting', function(req){
 });
 
 function counter(data) {  
-  //console.log(data.timer);
+  console.log(data.timer);
   if(data.timer == 0) {
     data.gameover = true;
+    var p1s = 0;
+    var p2s = 0;
+    console.log("GAME OVER!!");
+    console.log(data.p1points);
+    console.log(data.p2points);
+
+    for(i in data.p1points){
+      if(data.p1points[i] > data.p2points[i])
+      {
+        p1s++;
+      }
+      else if(data.p2points[i] > data.p1points[i])
+      {
+        p2s++;
+      }
+    }
+    if(p1s > p2s){
+      console.log("p1 wins");
+
+      mongo.connect(DB_HOSTNAME, function(err, db) {
+        if(!err) {
+          var collection = db.collection('user');
+          collection.update({id:data.p1req.session.passport.user.id}, {$inc:{winStreak: 1}}, {w:1}, function(err, result) {});
+          collection.update({id:data.p2req.session.passport.user.id}, {$set:{winStreak: 0}}, {w:1}, function(err, result) {});
+        }
+      });
+    }
+    else if(p2s > p1s){
+      console.log("p2 wins");
+      mongo.connect(DB_HOSTNAME, function(err, db) {
+        if(!err) {
+          var collection = db.collection('user');
+          collection.update({id:data.p2req.session.passport.user.id}, {$inc:{winStreak: 1}}, {w:1}, function(err, result) {});
+          collection.update({id:data.p1req.session.passport.user.id}, {$set:{winStreak: 0}}, {w:1}, function(err, result) {});
+        }
+      });
+    }
   } else {
     data.timer--;
     data.broadcast('timer',{time: data.timer});
@@ -204,7 +242,7 @@ app.io.route('ready', function(req) {
     }
 
     rooms[rno].broadcast('startgame');
-    rooms[rno].timer = 60;
+    rooms[rno].timer = 10;
     rooms[rno].broadcast('timer',{time: rooms[rno].timer});
     setTimeout(function(){counter(rooms[rno]);},1000);
   }
@@ -302,6 +340,14 @@ function sendToRooms(player){
 }
 
 function sendToRoom(room,player){
+  for(var i = 0; i < 5; i++){
+    if(player.id == room.p1req.session.passport.user.team[i].id){
+      room.p1points[i]++;
+    }
+    if(player.id == room.p2req.session.passport.user.team[i].id){
+      room.p2points[i]++;
+    }
+  }
   room.broadcast('newtweet',{id: player.id, name: player.name});
 }
 
