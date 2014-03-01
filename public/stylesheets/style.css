@@ -1,0 +1,273 @@
+@font-face {
+    font-family: BPL;
+    src: url('../fonts/Barclays Premier League.ttf');
+}
+body {
+    padding-top: 50px;
+}
+img.bg {
+  /* Set rules to fill background */
+  min-height: 100%;
+  min-width: 1024px;
+  z-index: -1;
+  /* Set up proportionate scaling */
+  width: 100%;
+  height: auto;
+    
+  /* Set up positioning */
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+@media screen and (max-width: 1024px) { /* Specific to this particular image */
+  img.bg {
+    left: 50%;
+    margin-left: -512px;   /* 50% */
+  }
+}
+
+.vote {
+    float: right;
+    padding: 15px 15px;
+}
+
+.teamDiv {
+    background: #4c7f69;
+    /*background: ;*/
+    border-radius: 5px;
+    border: 1px solid #588a74;
+    height: auto;
+    padding-bottom: 20px;
+    text-align: center;
+    color: #ccc;
+    font-family: 'BPL' !important;
+    font-size: 18px;
+}
+.teamDiv h3 {
+    font-family: 'BPL';
+}
+.player {
+    height: 110px;
+    width:180px;
+    text-align: center;
+    font-family: 'BPL' !important;
+    border: 0.5px solid grey;
+    padding: 0px 10px;
+    margin-left: auto;
+    margin-right: auto;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+    -webkit-transition: opacity 0.2s ease;
+    -moz-transition: opacity 0.2s ease;
+    -o-transition: opacity 0.2s ease;
+}
+#timer {
+    position: fixed;
+    font-size: 16pt;
+    font-weight: bold;
+    font-family: 'BPL';
+}
+#result {
+    font-family: 'BPL';
+    font-size: 16pt;
+    text-align: center;
+    background: rgba(34, 34, 34, 0.8);
+}
+.tempOp {
+    transition: opacity 0.2s ease;
+    -webkit-transition: opacity 0.2s ease;
+    -moz-transition: opacity 0.2s ease;
+    -o-transition: opacity 0.2s ease;
+    opacity: 1.0;
+}
+.player-count{    
+    font-family: 'BPL';
+    text-align: center;
+}
+.playerList {
+    list-style: none;
+    width: 100%;
+    padding: 0px;
+}
+.image-grid .playerPic {
+    width: 70px;
+    height: 70px;
+    border-radius: 35px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+.image-grid-p .playerPic {
+    width: 70px;
+    height: 70px;
+    border-radius: 35px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+.player:hover {
+    opacity: 1.0;
+    cursor: pointer;
+}
+
+.image-grid-p {    
+    margin-bottom: 20px;
+    width: 65%;
+    list-style: none;
+    background: rgba(34, 34, 34, 0.5);
+    color: #eee;
+    height: 355px;
+    overflow-y: scroll;
+}
+.image-grid-p a {
+    height: 140px;
+    width:180px;
+    cursor:pointer;
+    float: left;
+    padding: 10px;
+    margin: 0 -1px -1px 0;
+    font-size: 12px;
+    line-height: 1.4;
+    text-align: center;
+    border: 1px solid grey;
+    color: white;
+    text-decoration: none;
+    margin: 5px;
+    
+}     
+
+.image-grid-p .player-name{
+    padding: 5px;
+    font-family: 'BPL';
+}
+
+.image-grid-p .player-cost{
+    padding: 5px;
+    font-family: 'BPL';
+    text-align: right;
+}
+
+.image-grid-p img{
+    width: 100px;
+    height: 100px;
+} 
+.image-grid-p h3{
+    margin-left: 10px;
+}
+
+
+
+
+
+.image-grid {    
+    padding-bottom: 1px;
+    margin-bottom: 20px;
+    list-style: none;
+    background: rgba(34, 34, 34, 0.5);
+    color: #eee;
+}
+.image-grid a {
+    height: 140px;
+    width: 160px;
+    cursor:pointer;
+    float: left;
+    padding: 0px;
+    margin: 0 -1px -1px 0;
+    font-size: 12px;
+    line-height: 1.4;
+    text-align: center;
+    border: 1px solid grey;
+    color: white;
+    text-decoration: none;
+    margin: 5px;
+}     
+
+.image-grid .player-name{
+    padding: 5px;
+    font-family: 'BPL';
+}
+
+.image-grid .player-cost{
+    padding: 5px;
+    font-family: 'BPL';
+    text-align: right;
+}
+
+.image-grid img{
+    width: 100px;
+    height: 100px;
+} 
+.image-grid h3{
+    margin-left: 10px;
+}
+
+.user-data{
+    margin-top: 17px;
+    color:#ddd;
+    font-family: 'BPL';
+
+}
+.user-data #battle{
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+.stick-header {
+    position:fixed; 
+    width:100%;
+    height:57px;
+    top:0px; 
+    left:0px;
+    display:block;
+}
+
+.stick-selected-players {
+    position:fixed; 
+    width:100%;
+    height:220px;
+    left:0px;
+    display:block;
+    color: #eee;
+    background: rgba( 34, 34, 34, 0.8);
+    z-index:10;
+}
+
+.stick-right-col {
+    position: fixed;
+    top: 325px;
+    right:150px;
+}
+
+.player-select-holder {
+    margin-top: 225px;
+}
+
+.content-holder {
+    margin-top: 57px;
+}
+
+.sign-in-img{
+    border-radius: 25px;
+    vertical-align: middle;
+    height: 200px;
+    width: 200px;
+}
+
+.waitease {
+    text-align: center;
+    font-family: 'BPL';
+    margin-top: 100px;
+}
+
+.footer {
+    position: fixed;
+    bottom:0px;
+    left: 0px;
+}
+
+.center {
+    text-align: center;
+}
