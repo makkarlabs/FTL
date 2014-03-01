@@ -43,6 +43,7 @@ app.get('/login', routes.login);
 app.get('/dash', routes.dash);
 app.get('/pick', routes.pick);
 app.get('/afterlogin', ensureLoggedIn('/login'), routes.afterlogin)
+app.get('/wait', ensureLoggedIn('/login'), routes.wait)
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
@@ -73,35 +74,35 @@ passport.use(new TwitterStrategy({
     // NOTE: You'll probably want to associate the Twitter profile with a
     //       user record in your application's DB.    
     mongo.connect(DB_HOSTNAME, function(err, db) {
-    if(!err) {
-         
-      var collection = db.collection('user');
+      if(!err) {
+           
+        var collection = db.collection('user');
 
-      collection.find({id:profile.id}).toArray(function(err, items) {
-          if(items.length == 0) {
-            this_user = {id: profile.id, username: profile.username, displayName: profile.displayName, team: []};
-            if(profile.photos.length > 0) {
-              this_user.photo = profile.photos[0]["value"];
-            } 
-            collection.insert(this_user,{w:1}, function(err, result) {});
-            done(null, this_user)
-          } else {
-            this_user = items[0];
-            this_user.username = profile.username;
-            this_user.displayName = profile.displayName;            
-            if(profile.photos.length > 0) {
-              this_user.photo = profile.photos[0]["value"];
-            } 
-            collection.update({id:profile.id}, {$set:this_user}, {w:1}, function(err, result) {});         
-            done(null, this_user)   
-          }
-      });
-      
-    } else  {
-      console.log("some problem with the db");
-    }
-});
-    console.log(this_user);
+        collection.find({id:profile.id}).toArray(function(err, items) {
+            if(items.length == 0) {
+              this_user = {id: profile.id, username: profile.username, displayName: profile.displayName, 
+                team: [], transfer: false, winStreak: 0, lastFive: []};
+              if(profile.photos.length > 0) {
+                this_user.photo = profile.photos[0]["value"];
+              } 
+              collection.insert(this_user,{w:1}, function(err, result) {});
+              done(null, this_user)
+            } else {
+              this_user = items[0];
+              this_user.username = profile.username;
+              this_user.displayName = profile.displayName;            
+              if(profile.photos.length > 0) {
+                this_user.photo = profile.photos[0]["value"];
+              } 
+              collection.update({id:profile.id}, {$set:this_user}, {w:1}, function(err, result) {});         
+              done(null, this_user)   
+            }
+        });
+        
+      } else  {
+        console.log("some problem with the db");
+      }
+    });    
   }
 ));
 

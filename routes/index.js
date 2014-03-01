@@ -26,3 +26,11 @@ exports.afterlogin = function(req, res){
 exports.dash = function(req, res){
 
 };
+
+exports.wait = function(req, res){
+	if(req.user.team.length == 0) {
+		res.redirect('/pick');
+	} else {
+		res.render('wait')
+	}
+};
