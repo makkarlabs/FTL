@@ -1,8 +1,23 @@
 <% include head.ejs %>
 
 <% include header.ejs %>
-   <p> <%=players.length  %></p>
     <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h3 class="center">My Squad</h3>
+                <% for(var i=0; i<8; i++) { %>
+                <a>
+                    <div id="<%= players[i].id %>" class="player-unselected">
+                        <img class="img-circle" src="<%= players[i].pic %>" /> 
+                        <div class="player-name col-md-11"><%= players[i].name %></div>
+                        <div class="player-cost col-md-1"><%= players[i].cost %></div>
+                    </div>
+                </a>
+                <% } %>
+            </div>
+        </div>
+    </div>
+    <!-- <div class="container">
         <div class="row">
         <% for(i=0; i<4; i++) { %>
             <div class="col-md-3">
@@ -24,6 +39,6 @@
             </div>
         <% } %>
         </div>
-    </div>
+    </div> -->
 
 <% include footer.ejs %>

@@ -28,6 +28,7 @@ exports.afterlogin = function(req, res){
 };
 
 exports.dash = function(req, res){
+    res.render('dash', {title: 'Fantasy Tweet League | My Team'});
 };
 
 exports.wait = function(req, res){
