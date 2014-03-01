@@ -11,17 +11,17 @@ var path = require('path');
 var mongo = require('mongodb').MongoClient;
 
 //var app = express().http().io();
-var sock_routes = require('./sock_routes');
 var passport = require('passport'),
     TwitterStrategy = require('passport-twitter').Strategy,
     ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn;
 
 var config = require('./config');
-var players = require('./players');
+var players = require('./players').players;
+var twitter = require('ntwitter');
 
 //Initialize player sockets
-for(var i = 0; i < players.players.length; i++){
-  players.players.linkRooms = [];
+for(var i = 0; i < players.length; i++){
+  players[i].linkRooms = [];
 }
 
 // all environments
@@ -185,6 +185,24 @@ app.io.route('ready', function(req) {
   }
 
   if(rooms[rno].p1ready && rooms[rno].p2ready){
+
+    var this_room = rooms[rno];
+    var playersitr = [];
+    for (var i in this_room.p1req.session.passport.user.team){
+      playersitr.push(this_room.p1req.session.passport.user.team[i].id - 1);
+    }
+    var roomPlayers = playersitr.slice(0, 5);
+    playersitr = [];
+    for (var i in this_room.p2req.session.passport.user.team){
+      playersitr.push(this_room.p2req.session.passport.user.team[i].id - 1);
+    }
+    roomPlayers = roomPlayers.concat(playersitr.slice(0, 5));
+    roomPlayers = roomPlayers.filter(function(value, index, self){return self.indexOf(value) === index});
+    console.log(roomPlayers);
+    for(var i in roomPlayers){
+      players[roomPlayers[i]].linkRooms.push(this_room);
+    }
+
     rooms[rno].broadcast('startgame');
     rooms[rno].timer = 60;
     rooms[rno].broadcast('timer',{time: rooms[rno].timer});
@@ -193,6 +211,99 @@ app.io.route('ready', function(req) {
 
 });
 
+
+//NTwitter
+//console.log(config.TWITTER_CONSUMER_KEY)
+var twit = new twitter({
+  consumer_key: config.TWITTER_CONSUMER_KEY,
+  consumer_secret: config.TWITTER_CONSUMER_SECRET,
+  access_token_key: config.TWITTER_ACCESS_TOKEN_KEY,
+  access_token_secret: config.TWITTER_ACCESS_TOKEN_SECRET
+});
+
+function generateTrackString()
+{
+  var trackString = "";
+  players.forEach(function(player){
+    player["users"] = [];
+    if(trackString == "")
+      trackString += player.sname;
+    else
+      trackString += "," + player.sname;
+  });
+  console.log("A new TrackString '" + trackString +"' is generated.");
+  return trackString;
+}
+
+function startStream()
+{
+  twit.stream('statuses/filter', {'track':generateTrackString()},
+      function(stream) {
+        stream.on('data',function(data){
+          //console.log(data['text']);
+          sendPlayerData(data['text']);
+        });
+
+        stream.on('end', function (response) {
+          // Handle a disconnection
+          console.log("ended!!");
+        });
+        
+        stream.on('destroy', function (response) {
+          // Handle a 'silent' disconnection from Twitter, no end/error event fired
+          console.log("destroyed!!");
+        });
+
+        stream.on('error', function (response,code) {
+          // Handle a 'silent' disconnection from Twitter, no end/error event fired
+          console.log("error!!");
+          console.log(response);
+          console.log(code);
+        });
+
+      });
+}
+function sendPlayerData(data)
+{
+  if(data != undefined)
+  {
+    players.forEach(function(player){
+      if(player["handle"] == "")
+      {
+        if(data.toLowerCase().indexOf(player["sname"]) != -1)
+        {
+          sendToRooms(player);
+        }
+      }
+      else
+      {
+        if(data.toLowerCase().indexOf(player["sname"]) != -1 || data.indexOf(player["handle"]) != -1)
+        {
+          sendToRooms(player);
+        }
+      }
+    });
+  }
+  else
+  {
+    console.log("For some reason data is undefined");
+  }
+}
+
+startStream();
+
+function sendToRooms(player){
+  for(var i in player.linkRooms){
+    if(!player.linkRooms[i].gameover)
+    {
+      sendToRoom(player.linkRooms[i], player);
+    }
+  }
+}
+
+function sendToRoom(room,player){
+  room.broadcast('newtweet',{id: player.id, name: player.name});
+}
 
 //Socket.io
 /*var io = require('socket.io').listen(eserver);

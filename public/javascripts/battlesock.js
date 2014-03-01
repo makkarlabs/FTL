@@ -6,4 +6,8 @@ io.on('startgame', function(data){
 		$("#banner").html(data.time);
 		console.log("time remaining "+data.time);
 	});
+
+    io.on('newtweet', function(data){
+        console.log(data.id+","+data.name);
+    });
 });
