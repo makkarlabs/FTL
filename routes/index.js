@@ -64,5 +64,16 @@ exports.teamselect = function(req, res){
 	}
  }
 
-
-
+exports.leaderboard = function(req, res){
+    mongo.connect(config.DB_HOSTNAME, function(err, db) {
+        if(!err) {
+            var collection = db.collection('user');
+            collection.find().sort({winStreak: -1}).limit(10).toArray(function(err, items) {
+                console.log(items);
+            });
+        }
+        else {
+            console.log("mongo error");
+        }
+    });
+}
