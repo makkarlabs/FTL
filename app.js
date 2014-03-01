@@ -54,6 +54,7 @@ app.get('/afterlogin', ensureLoggedIn('/login'), routes.afterlogin);
 app.get('/wait', ensureLoggedIn('/login'), routes.wait);
 app.post('/teamSelect', ensureLoggedIn('/login'), routes.teamselect);
 app.get('/leaderboard', routes.leaderboard);
+app.post('/chooseSquad', routes.choosesquad)
 app.post('/battle', ensureLoggedIn('login'), function(req, res) {
   var this_room = rooms[+req.body.room];
   req.session.rno = +req.body.room;
