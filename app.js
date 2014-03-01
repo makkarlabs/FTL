@@ -40,7 +40,7 @@ if ('development' == app.get('env')) {
 app.get('/', routes.index);
 app.get('/login', routes.login);
 
-mongo.connect("mongodb://localhost:27017/ftl", function(err, db) {
+/*mongo.connect("mongodb://localhost:27017/ftl", function(err, db) {
   if(!err) {
     console.log("We are connected to mongo! ");
     
@@ -55,7 +55,7 @@ mongo.connect("mongodb://localhost:27017/ftl", function(err, db) {
     console.log("some problem with the db");
   }
 
-});
+});*/
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
@@ -84,6 +84,35 @@ passport.use(new TwitterStrategy({
     // NOTE: You'll probably want to associate the Twitter profile with a
     //       user record in your application's DB.
     var user = profile;
+    mongo.connect("mongodb://localhost:27017/ftl", function(err, db) {
+  if(!err) {
+       
+    var collection = db.collection('user');
+
+    collection.find({id:profile.id}).toArray(function(err, items) {
+        if(items.length == 0) {
+          var this_user = {id: profile.id, username: profile.username, displayName: profile.displayName};
+          if(profile.photos.length > 0) {
+            this_user.photo = profile.photos[0]["value"];
+          } 
+          collection.insert(this_user,{w:1}, function(err, result) {});
+        } else {
+
+          var this_user = {username: profile.username, displayName: profile.displayName};
+          if(profile.photos.length > 0) {
+            this_user.photo = profile.photos[0]["value"];
+          } 
+          collection.update({id:profile.id}, {$set:this_user}, {w:1}, function(err, result) {});
+
+        }
+    });
+    
+  } else  {
+    console.log("some problem with the db");
+  }
+
+});
+
     return done(null, user);
   }
 ));
