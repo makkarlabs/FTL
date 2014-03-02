@@ -3,9 +3,9 @@
 <% include header.ejs %>
 <h2 style="text-align:center">Leaderboard</h2>
 <table class="table borderless table-hover leaderboard center-align" >
-<tr><th>Rank</th><th>Profile </th><th>Winning Streak</th></tr>
+<tr><th>Rank</th><th>Profile </th><th>Winning Streak</th><th>Recent Form</th></tr>
 <% for (var i=0; i<items.length; i++) { %>
-    <tr><td><%=i+1%></td><td><a href="http://twitter.com/<%=items[i].username%>"><img src="<%=items[i].photo%>"/></a> <%=items[i].username%></td><td><%=items[i].winStreak%></td></tr>
+    <tr><td><%=i+1%></td><td><a href="http://twitter.com/<%=items[i].username%>"><img src="<%=items[i].photo%>"/></a> <%=items[i].username%></td><td><%=items[i].winStreak%></td> <td><% for (var j in items[i].lastFive) { %> <%=items[i].lastFive[j]%> <% }%> </td> </tr>
 <% } %> 
 </table>
 
