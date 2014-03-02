@@ -156,14 +156,32 @@ img.bg {
     color: #000;
 }
 
+.dashSelectCont .player-selected .player-name{
+    padding: 5px 0px;
+    font-family: 'BPL';
+    font-size: 14px;
+    color: #000;
+}
+
+.dashSelectCont .player-selected .player-cost{
+    font-family: 'BPL';
+    padding: 5px 0px;
+    font-size: 14px;
+    text-align: right;
+    color: #000;
+}
+
 #banner {
     font-family: 'BPL';
     text-align: center;
     font-size: 25px;
+    color: #ddd;
 }
 
 .gameIcon {
-    float: right;
+    width: 200px;
+    height: auto;
+    text-align: center;
 }
 
 .gameIcon img {
@@ -172,12 +190,12 @@ img.bg {
 }
 
 .gameIcon .player-name {
-    text-align: center;
+    color: #000;
     font-family: 'BPL';
 }
 
 .gameIcon .player-count {
-    text-align: center;
+    color: #000;
     font-family: 'BPL';
 }
 
@@ -197,6 +215,13 @@ img.bg {
 .squadCont {
     background: rgba(230, 230, 230, 0.5);
     border-radius: 30px;
+}
+
+.gameSpace {
+    background: rgba(230, 230, 230, 0.5);
+    border-radius: 20px;
+    padding: 10px 40px;
+    margin-bottom: 20px;
 }
 
 .fadeOut {
@@ -221,197 +246,6 @@ img.bg {
     -moz-transition: opacity 0.2s ease;
     -o-transition: opacity 0.2s ease;
     opacity: 1.0;
-}
-
-.sign-in-img{
-    border-radius: 25px;
-    vertical-align: middle;
-    height: 200px;
-    width: 200px;
-}
-
-.waitease {
-    text-align: center;
-    font-family: 'BPL';
-    margin-top: 100px;
-}
-
-.image-grid {    
-    padding-bottom: 1px;
-    margin-bottom: 20px;
-    list-style: none;
-    /*background: rgba(34, 34, 34, 0.5);*/
-    color: #eee;
-}
-.image-grid a{
-    height: 130px;
-    width: 150px;
-    cursor:pointer;
-    float: left;
-    padding: 10px;
-    margin: 0 -1px -1px 0;
-    font-size: 12px;
-    line-height: 1.4;
-    text-align: center;
-    border: 1px solid grey;
-    color: white;
-    text-decoration: none;
-    margin: 5px;
-}
-
-
-.image-grid img{
-    width: 70px;
-    height: 70px;
-} 
-.image-grid h3{
-    margin-left: 10px;
-}
-
-.user-data{
-    margin-top: 17px;
-    color:#ddd;
-    font-family: 'BPL';
-
-}
-.user-data #battle{
-    padding-left: 50px;
-    padding-right: 50px;
-}
-
-.stick-header {
-    /*position:fixed; */
-    width:100%;
-    height:57px;
-    /*top:0px; 
-    left:0px;*/
-    display:block;
-}
-
-.stick-selected-players {
-    
-    width:100%;
-    /*height:240px;*/
-    /*left:0px;*/
-    display:block;
-    color: #eee;
-    background: rgba( 34, 34, 34, 0.8);
-    z-index:10;
-}
-
-.stick-right-col {
-    /*position: fixed;*/
-    top: 325px;
-    right:150px;
-}
-
-.player-select-holder {
-    margin-top: 225px;
-}
-.teamDiv {
-    background: #4c7f69;
-    /*background: ;*/
-    border-radius: 5px;
-    border: 1px solid #588a74;
-    height: auto;
-    padding-bottom: 20px;
-    text-align: center;
-    color: #ccc;
-    font-family: 'BPL' !important;
-    font-size: 18px;
-}
-.teamDiv h3 {
-    font-family: 'BPL';
-}
-.player {
-    height: 110px;
-    width:180px;
-    text-align: center;
-    font-family: 'BPL' !important;
-    border: 0.5px solid grey;
-    padding: 0px 10px;
-    margin-left: auto;
-    margin-right: auto;
-    opacity: 0.7;
-    transition: opacity 0.2s ease;
-    -webkit-transition: opacity 0.2s ease;
-    -moz-transition: opacity 0.2s ease;
-    -o-transition: opacity 0.2s ease;
-}
-#timer {
-    position: fixed;
-    font-size: 16pt;
-    font-weight: bold;
-    font-family: 'BPL';
-}
-#result {
-    font-family: 'BPL';
-    font-size: 16pt;
-    text-align: center;
-    background: rgba(34, 34, 34, 0.8);
-}
-.tempOp {
-    transition: opacity 0.2s ease;
-    -webkit-transition: opacity 0.2s ease;
-    -moz-transition: opacity 0.2s ease;
-    -o-transition: opacity 0.2s ease;
-    opacity: 1.0;
-}
-.player-count{    
-    font-family: 'BPL';
-    text-align: center;
-}
-.playerList {
-    list-style: none;
-    width: 100%;
-    padding: 0px;
-}
-.image-grid .playerPic {
-    width: 70px;
-    height: 70px;
-    border-radius: 35px;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
-}
-
-.image-grid-p .playerPic {
-    width: 70px;
-    height: 70px;
-    border-radius: 35px;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
-}
-
-.player:hover {
-    opacity: 1.0;
-    cursor: pointer;
-}
-
-.image-grid-p {    
-    margin-bottom: 20px;
-    list-style: none;
-    /*background: rgba(34, 34, 34, 0.5);*/
-    color: #eee;
-    height: 355px;
-    overflow-y: scroll;
-}
-.image-grid-p a {
-    height: 140px;
-    width:180px;
-    cursor:pointer;
-    float: left;
-    padding: 10px;
-    margin: 0 -1px -1px 0;
-    font-size: 12px;
-    line-height: 1.4;
-    text-align: center;
-    border: 1px solid grey;
-    color: white;
-    text-decoration: none;
-    margin: 5px;
-    
 }
 
 .leaderboard td , .leaderboard th{
