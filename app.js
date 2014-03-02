@@ -182,72 +182,103 @@ function counter(data) {
         p2s++;
       }
     }
-    if(p1s > p2s){
-      console.log("p1 wins");
 
-      mongo.connect(DB_HOSTNAME, function(err, db) {
+
+    mongo.connect(DB_HOSTNAME, function(err, db) {
         if(!err) {
           var collection = db.collection('user');
-          if(data.p1req.session.passport.user.lastFive.length >= 5){
-            data.p1req.session.passport.user.lastFive = data.p1req.session.passport.user.lastFive.splice(0,1);
-            data.p1req.session.passport.user.lastFive.push("W");
-          } else {
-            data.p1req.session.passport.user.lastFive.push("W");
+
+          collection.find({id:data.p1req.session.passport.user.id}).toArray(function(err, items) {
+            data.p1req.session.passport.user.lastFive = items[0].lastFive;
+          });
+
+
+          collection.find({id:data.p2req.session.passport.user.id}).toArray(function(err, items) {
+            data.p2req.session.passport.user.lastFive = items[0].lastFive;
+          });
+
+          
+          if(p1s > p2s){
+            console.log("p1 wins");
+
+            mongo.connect(DB_HOSTNAME, function(err, db) {
+              if(!err) {
+                var collection = db.collection('user');
+
+
+                if(data.p1req.session.passport.user.lastFive.length >= 5){
+                  data.p1req.session.passport.user.lastFive = data.p1req.session.passport.user.lastFive.splice(1,4);
+                  data.p1req.session.passport.user.lastFive.push("W");
+                } else {
+                  data.p1req.session.passport.user.lastFive.push("W");
+                }
+                if(data.p2req.session.passport.user.lastFive.length >= 5){
+                  data.p2req.session.passport.user.lastFive = data.p2req.session.passport.user.lastFive.splice(1,4);
+                  data.p2req.session.passport.user.lastFive.push("L");
+                } else {
+                  data.p2req.session.passport.user.lastFive.push("L");
+                }
+                console.log("last five" + data.p1req.session.passport.user.lastFive);
+                console.log("last five" + data.p2req.session.passport.user.lastFive);
+                collection.update({id:data.p1req.session.passport.user.id}, {$inc:{winStreak: 1}, $set:{lastFive: data.p1req.session.passport.user.lastFive}}, {w:1}, function(err, result) {});
+                collection.update({id:data.p2req.session.passport.user.id}, {$set:{winStreak: 0}, $set:{lastFive: data.p2req.session.passport.user.lastFive}}, {w:1}, function(err, result) {});
+              }
+            });
           }
-          if(data.p2req.session.passport.user.lastFive.length >= 5){
-            data.p2req.session.passport.user.lastFive = data.p2req.session.passport.user.lastFive.splice(0,1);
-            data.p2req.session.passport.user.lastFive.push("L");
+          else if(p2s > p1s){
+            console.log("p2 wins");
+            mongo.connect(DB_HOSTNAME, function(err, db) {
+              if(!err) {
+                var collection = db.collection('user');
+                if(data.p1req.session.passport.user.lastFive.length >= 5){
+                  data.p1req.session.passport.user.lastFive = data.p1req.session.passport.user.lastFive.splice(1,4);
+                  data.p1req.session.passport.user.lastFive.push("L");
+                } else {
+                  data.p1req.session.passport.user.lastFive.push("L");
+                }
+                if(data.p2req.session.passport.user.lastFive.length >= 5){
+                  data.p2req.session.passport.user.lastFive = data.p2req.session.passport.user.lastFive.splice(1,4);
+                  data.p2req.session.passport.user.lastFive.push("W");
+                } else {
+                  data.p2req.session.passport.user.lastFive.push("W");
+                }
+                console.log("last five" + data.p1req.session.passport.user.lastFive);
+                console.log("last five" + data.p2req.session.passport.user.lastFive);
+                collection.update({id:data.p1req.session.passport.user.id}, {$inc:{winStreak: 1}, $set:{lastFive: data.p1req.session.passport.user.lastFive}}, {w:1}, function(err, result) {});
+                collection.update({id:data.p2req.session.passport.user.id}, {$set:{winStreak: 0}, $set:{lastFive: data.p2req.session.passport.user.lastFive}}, {w:1}, function(err, result) {});
+              }
+            });
           } else {
-            data.p2req.session.passport.user.lastFive.push("L");
+            console.log("Draw");
+            mongo.connect(DB_HOSTNAME, function(err, db) {
+              if(!err) {
+                var collection = db.collection('user');
+                if(data.p1req.session.passport.user.lastFive.length >= 5){
+                  data.p1req.session.passport.user.lastFive = data.p1req.session.passport.user.lastFive.splice(1,4);
+                  data.p1req.session.passport.user.lastFive.push("D");
+                } else {
+                  data.p1req.session.passport.user.lastFive.push("D");
+                }
+                if(data.p2req.session.passport.user.lastFive.length >= 5){
+                  data.p2req.session.passport.user.lastFive = data.p2req.session.passport.user.lastFive.splice(1,4);
+                  data.p2req.session.passport.user.lastFive.push("D");
+                } else {
+                  data.p2req.session.passport.user.lastFive.push("D");
+                }
+                console.log("last five" + data.p1req.session.passport.user.lastFive);
+                console.log("last five" + data.p2req.session.passport.user.lastFive);
+                collection.update({id:data.p1req.session.passport.user.id}, {$set:{lastFive: data.p1req.session.passport.user.lastFive}}, {w:1}, function(err, result) {});
+                collection.update({id:data.p2req.session.passport.user.id}, {$set:{lastFive: data.p2req.session.passport.user.lastFive}}, {w:1}, function(err, result) {});
+              }
+            });
           }
-          collection.update({id:data.p1req.session.passport.user.id}, {$inc:{winStreak: 1}, $set:{lastFive: data.p1req.session.passport.user.lastFive}}, {w:1}, function(err, result) {});
-          collection.update({id:data.p2req.session.passport.user.id}, {$set:{winStreak: 0}, $set:{lastFive: data.p2req.session.passport.user.lastFive}}, {w:1}, function(err, result) {});
+          
+        }else{
+          console.log("db error");
         }
       });
-    }
-    else if(p2s > p1s){
-      console.log("p2 wins");
-      mongo.connect(DB_HOSTNAME, function(err, db) {
-        if(!err) {
-          var collection = db.collection('user');
-          if(data.p1req.session.passport.user.lastFive.length >= 5){
-            data.p1req.session.passport.user.lastFive = data.p1req.session.passport.user.lastFive.splice(0,1);
-            data.p1req.session.passport.user.lastFive.push("L");
-          } else {
-            data.p1req.session.passport.user.lastFive.push("L");
-          }
-          if(data.p2req.session.passport.user.lastFive.length >= 5){
-            data.p2req.session.passport.user.lastFive = data.p2req.session.passport.user.lastFive.splice(0,1);
-            data.p2req.session.passport.user.lastFive.push("W");
-          } else {
-            data.p2req.session.passport.user.lastFive.push("W");
-          }
-          collection.update({id:data.p2req.session.passport.user.id}, {$inc:{winStreak: 1}, $set:{lastFive: data.p1req.session.passport.user.lastFive}}, {w:1}, function(err, result) {});
-          collection.update({id:data.p1req.session.passport.user.id}, {$set:{winStreak: 0}, $set:{lastFive: data.p2req.session.passport.user.lastFive}}, {w:1}, function(err, result) {});
-        }
-      });
-    } else {
-      console.log("Draw");
-      mongo.connect(DB_HOSTNAME, function(err, db) {
-        if(!err) {
-          var collection = db.collection('user');
-          if(data.p1req.session.passport.user.lastFive.length >= 5){
-            data.p1req.session.passport.user.lastFive = data.p1req.session.passport.user.lastFive.splice(0,1);
-            data.p1req.session.passport.user.lastFive.push("D");
-          } else {
-            data.p1req.session.passport.user.lastFive.push("D");
-          }
-          if(data.p2req.session.passport.user.lastFive.length >= 5){
-            data.p2req.session.passport.user.lastFive = data.p2req.session.passport.user.lastFive.splice(0,1);
-            data.p2req.session.passport.user.lastFive.push("D");
-          } else {
-            data.p2req.session.passport.user.lastFive.push("D");
-          }
-          collection.update({id:data.p1req.session.passport.user.id}, {$set:{lastFive: data.p1req.session.passport.user.lastFive}}, {w:1}, function(err, result) {});
-          collection.update({id:data.p2req.session.passport.user.id}, {$set:{lastFive: data.p2req.session.passport.user.lastFive}}, {w:1}, function(err, result) {});
-        }
-      });
-    }
+
+
     /*console.log("player1 last 5");
     console.log(data.p1req.session.passport.user.lastFive)*/ 
   } else {
@@ -293,7 +324,7 @@ app.io.route('ready', function(req) {
     }
 
     rooms[rno].broadcast('startgame');
-    rooms[rno].timer = 60;
+    rooms[rno].timer = 10;
     rooms[rno].broadcast('timer',{time: rooms[rno].timer});
     setTimeout(function(){counter(rooms[rno]);},1000);
   }
