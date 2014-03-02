@@ -179,7 +179,9 @@ img.bg {
 }
 
 .gameIcon {
-    float: right;
+    width: 200px;
+    height: auto;
+    text-align: center;
 }
 
 .gameIcon img {
@@ -188,13 +190,11 @@ img.bg {
 }
 
 .gameIcon .player-name {
-    text-align: center;
     color: #000;
     font-family: 'BPL';
 }
 
 .gameIcon .player-count {
-    text-align: center;
     color: #000;
     font-family: 'BPL';
 }
