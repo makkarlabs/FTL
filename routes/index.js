@@ -41,10 +41,6 @@ exports.wait = function(req, res){
 	}
 };
 
-exports.temp = function(req, res){
-    res.render('h2hlayout', {title: 'Fantasy Tweet League | Match', user: req.user, players: players.players, reqd: false});
-}
-
 exports.teamselect = function(req, res){	
 	if(req.user.team.length == 0) {
 		if(req.body.players.length == 8) {
