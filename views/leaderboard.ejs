@@ -1,0 +1,12 @@
+<% include head.ejs %>
+
+<% include header.ejs %>
+<h2 style="text-align:center">Leaderboard</h2>
+<table class="table table-striped leaderboard center-align" >
+<tr><th>Rank</th><th>Profile </th><th>Winning Streak</th></tr>
+<% for (var i=0; i<items.length; i++) { %>
+    <tr><td><%=i+1%></td><td><a href="http://twitter.com/<%=items[i].username%>"><img src="<%=items[i].photo%>"/></a> <%=items[i].username%></td><td><%=items[i].winStreak%></td></tr>
+<% } %> 
+</table>
+
+<% include footer.ejs %>
