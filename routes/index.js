@@ -8,7 +8,9 @@ var players = require('../players');
 var updateUser = require('../app');
 
 exports.index = function(req, res){
-  res.render('login', { title: 'Fantasy Tweet League | Login with Twitter', user: req.user });
+  res.redirect('/dash');
+  //res.render('login', { title: 'Fantasy Tweet League | Login with Twitter', user: req.user });
+
 };
 
 exports.login = function(req, res){
@@ -35,7 +37,7 @@ exports.wait = function(req, res){
 	if(req.user.team.length == 0) {
 		res.redirect('/pick');
 	} else {
-		res.render('wait');
+		res.render('wait', {user: req.user});
 	}
 };
 

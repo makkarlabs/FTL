@@ -416,4 +416,6 @@ img.bg {
 
 .leaderboard {
     width: 400px;
+    border-radius: 5px;
+    background-color: rgba(230,230,230,0.6);
 }
