@@ -8,15 +8,17 @@ var players = require('../players');
 var updateUser = require('../app');
 
 exports.index = function(req, res){
-  res.render('login', { title: 'Fantasy Tweet League | Login with Twitter', user: req.user });
+  res.redirect('/dash');
+  //res.render('login', { title: 'Fantasy Tweet League | Login with Twitter', user: req.user, reqd: true });
+
 };
 
 exports.login = function(req, res){
-  res.render('login', { title: 'Fantasy Tweet League | Login with Twitter', user: req.user  });
+  res.render('login', { title: 'Fantasy Tweet League | Login with Twitter', user: req.user, reqd: true });
 };
 
 exports.pick = function(req, res){
-  res.render('pick', {title: 'Fantasy Tweet League | Choose your Players', players: players.players, user: req.user });
+  res.render('pick', {title: 'Fantasy Tweet League | Choose your Players', players: players.players, user: req.user, reqd: true });
 };
 
 exports.afterlogin = function(req, res){
@@ -35,7 +37,7 @@ exports.wait = function(req, res){
 	if(req.user.team.length == 0) {
 		res.redirect('/pick');
 	} else {
-		res.render('wait');
+		res.render('wait', {user: req.user, reqd: true});
 	}
 };
 
@@ -71,7 +73,7 @@ exports.leaderboard = function(req, res){
             var collection = db.collection('user');
             collection.find().sort({winStreak: -1}).limit(10).toArray(function(err, items) {
                 console.log(items);
-                res.render('leaderboard', {items: items});
+                res.render('leaderboard', {items: items, user: req.user, reqd: true});
             });
         }
         else {

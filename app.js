@@ -46,7 +46,7 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-app.get('/', routes.index);
+app.get('/', ensureLoggedIn('/login'), routes.index);
 app.get('/login', routes.login);
 app.get('/dash', routes.dash);
 app.get('/pick', routes.pick);
@@ -62,10 +62,10 @@ app.post('/battle', ensureLoggedIn('login'), function(req, res) {
   //var rno = req.session.roomid;
   if(req.body.player == '1') {    
     this_room.p1id = req.user.id;
-    res.render('headtohead', {user: this_room.p1req.session.passport.user, opponent: this_room.p2req.session.passport.user});
+    res.render('headtohead', {user: this_room.p1req.session.passport.user, opponent: this_room.p2req.session.passport.user, reqd: false});
   } else {
     this_room.p2id = req.user.id;
-    res.render('headtohead', {user: this_room.p2req.session.passport.user, opponent: this_room.p1req.session.passport.user});
+    res.render('headtohead', {user: this_room.p2req.session.passport.user, opponent: this_room.p1req.session.passport.user, reqd: false});
   }
 });
 
