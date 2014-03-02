@@ -157,8 +157,29 @@ img.bg {
     font-family: 'BPL';
 }
 
+.fadeOut {
+    transition: opacity 0.2s ease;
+    -webkit-transition: opacity 0.2s ease;
+    -moz-transition: opacity 0.2s ease;
+    -o-transition: opacity 0.2s ease;
+    opacity: 0.7;
+}
 
+.fadeOut:hover {
+    transition: opacity 0.2s ease;
+    -webkit-transition: opacity 0.2s ease;
+    -moz-transition: opacity 0.2s ease;
+    -o-transition: opacity 0.2s ease;
+    opacity: 1.0;
+}
 
+.gameIcon img {
+    transition: opacity 0.2s ease;
+    -webkit-transition: opacity 0.2s ease;
+    -moz-transition: opacity 0.2s ease;
+    -o-transition: opacity 0.2s ease;
+    opacity: 1.0;
+}
 
 .sign-in-img{
     border-radius: 25px;

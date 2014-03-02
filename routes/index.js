@@ -8,15 +8,15 @@ var players = require('../players');
 var updateUser = require('../app');
 
 exports.index = function(req, res){
-  res.render('login', { title: 'Fantasy Tweet League | Login with Twitter' });
+  res.render('login', { title: 'Fantasy Tweet League | Login with Twitter', user: req.user });
 };
 
 exports.login = function(req, res){
-  res.render('login', { title: 'Fantasy Tweet League | Login with Twitter' });
+  res.render('login', { title: 'Fantasy Tweet League | Login with Twitter', user: req.user  });
 };
 
 exports.pick = function(req, res){
-  res.render('pick', {title: 'Fantasy Tweet League | Choose your Players', players: players.players});
+  res.render('pick', {title: 'Fantasy Tweet League | Choose your Players', players: players.players, user: req.user });
 };
 
 exports.afterlogin = function(req, res){

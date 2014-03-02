@@ -8,24 +8,10 @@ $(document).ready(function() {
     io.emit('ready');
 
     console.log("Emitted Im ready");
-    $('#banner').html('');
-    $('#banner').css('left','40%');
-    var clock = $('#banner').FlipClock(60, {
-                    clockFace: 'Counter'
-                });
 
     io.on('startgame', function(data){
         io.on('timer', function(data){
-            if(!starttimer){
-                starttimer = true;
-            
-                setTimeout(function() {
-                    setInterval(function() {
-                        if(clock.getTime.time != 0)
-                            clock.decrement();
-                    }, 1000);
-                });
-            }
+            $('#banner').html(data.time);
         });
 
         io.on('newtweet', function(data){
@@ -52,46 +38,46 @@ $(document).ready(function() {
         var t1p4 = +$('#t1p4s').html();
         var t2p4 = +$('#t2p4s').html();
 
-        console.log("zzzzzzzzzzzzzzzzzzzzzz");
-
-        console.log(t1p0);
-        console.log(t2p0);
-        console.log(t1p1);
-        console.log(t2p1);
-        console.log(t1p2);
-        console.log(t2p2);
-        console.log(t1p3);
-        console.log(t2p3);
-        console.log(t1p4);
-        console.log(t2p4);
-
-        console.log( t1p0 - t2p0 );
-
-        console.log("zzzzzzzzzzzzzzzzzzzzzz")
-        if(t1p0 > t2p0)
+        if(t1p0 > t2p0) {
             t1S++;
-        else if(t1p0 < t2p0)
+            $('#t2p0 img').addClass('fadeOut');
+        }
+        else if(t1p0 < t2p0) {
             t2S++;
-        
-        if(t1p1 > t2p1)
+            $('#t1p0 img').addClass('fadeOut');
+        }
+        if(t1p1 > t2p1) {
             t1S++;
-        else if(t1p1 < t2p1)
+            $('#t2p1 img').addClass('fadeOut');
+        }
+        else if(t1p1 < t2p1) {
             t2S++;
-        
-        if(t1p2 > t2p2)
+            $('#t1p1 img').addClass('fadeOut');
+        }
+        if(t1p2 > t2p2) {
             t1S++;
-        else if(t1p2 < t2p2)
+            $('#t2p2 img').addClass('fadeOut');
+        }
+        else if(t1p2 < t2p2) {
             t2S++;
-        
-        if(t1p3 > t2p3)
+            $('#t1p2 img').addClass('fadeOut');
+        }
+        if(t1p3 > t2p3) {
             t1S++;
-        else if(t1p3 < t2p3)
+            $('#t2p3 img').addClass('fadeOut');
+        }
+        else if(t1p3 < t2p3) {
             t2S++;
-        
-        if(t1p4 > t2p4)
+            $('#t1p3 img').addClass('fadeOut');
+        }
+        if(t1p4 > t2p4) {
             t1S++;
-        else if(t1p4 < t2p4)
+            $('#t2p4 img').addClass('fadeOut');
+        }
+        else if(t1p4 < t2p4) {
             t2S++;
+            $('#t1p4 img').addClass('fadeOut');
+        }
         
         var text = t1S + ' - ' + t2S;
         if(t1S < t2S)
@@ -100,5 +86,6 @@ $(document).ready(function() {
             $('#banner').html('You Won ' + text);
         else
             $('#banner').html('You Drew ' + text);
+        $('#toDash').removeAttr('disabled');
     }
 });
