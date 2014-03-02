@@ -1,15 +1,31 @@
-    var io = io.connect();
-
+var io = io.connect();
+console.log("Socket connected")
 
 $(document).ready(function() {
+
+    var starttimer = false;
+
     io.emit('ready');
+
+    console.log("Emitted Im ready");
+    $('#banner').html('');
+    $('#banner').css('left','40%');
+    var clock = $('#banner').FlipClock(60, {
+                    clockFace: 'Counter'
+                });
 
     io.on('startgame', function(data){
         io.on('timer', function(data){
-            $('#banner').html(data.time);
-            console.log("time remaining "+data.time);
-            if(data.time == 0)
-                post_match();
+            if(!starttimer){
+                starttimer = true;
+            
+                setTimeout(function() {
+                    setInterval(function() {
+                        if(clock.getTime.time != 0)
+                            clock.decrement();
+                    }, 1000);
+                });
+            }
         });
 
         io.on('newtweet', function(data){
@@ -17,6 +33,10 @@ $(document).ready(function() {
             var count = $('.s' + data.id).html();
             count++;
             $('.s' + data.id).html(count);
+        });
+
+        io.on('gameover', function(data){
+            post_match();
         });
     });
     function post_match() {
