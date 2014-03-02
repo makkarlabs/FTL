@@ -30,14 +30,14 @@ exports.afterlogin = function(req, res){
 };
 
 exports.dash = function(req, res){
-    res.render('dash', {title: 'Fantasy Tweet League | My Team', user: req.user});
+    res.render('dash', {title: 'Fantasy Tweet League | My Team', user: req.user, reqd: true});
 };
 
 exports.wait = function(req, res){
 	if(req.user.team.length == 0) {
 		res.redirect('/pick');
 	} else {
-		res.render('wait', {user: req.user, reqd: true});
+		res.render('wait', {user: req.user, reqd: false});
 	}
 };
 
