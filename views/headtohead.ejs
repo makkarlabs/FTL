@@ -9,28 +9,42 @@
 
     <div class="container">
         <div class="row">
+            <div class="col-md-12 center">
             <div id="banner">60</div>
-            <a id="toDash" href="/dash" disabled="disabled" class="btn btn-primary center">Dashboard</a>
+            <a id="toDash" href="/dash" disabled="disabled" class="btn btn-primary">Dashboard</a>
+            </div>
         </div>
+        <br>
+        <br>
         <div class="row">
-            <div class="col-md-offset-2 col-md-8" class="gameSpace">
+            <div class="col-md-offset-2 col-md-8 gameSpace">
                 <h3 class="pull-left plFont"><%= user.username %></h3>
                 <h3 class="pull-right plFont"><%= opponent.username %></h3>
                 <div class="row"></div>
-                <% for(i=0; i<5; i++) { %>
-                <div class="row">
-                    <div class="gameIcon pull-left" id="t1p<%= i %>">
-                        <img class="img-circle" src="<%= user.team[i].pic %>"/>
-                        <div class="player-name"><%= user.team[i].name %></div>
-                        <div class="player-count s<%= user.team[i].id %>" id="t1p<%= i %>s">0</div>
+                <div class="panel-group" id="accordion">
+                    <% for(i=0; i<5; i++) { %>
+                    <div class="panel panel-default">
+                    <div class="panel-heading">
+                    <a href="" data-toggle="collapse" href="#div<%= i %>" data-parent="#accordion">
+                    <div class="row">
+                        <div class="gameIcon pull-left" id="t1p<%= i %>">
+                            <img class="img-circle" src="<%= user.team[i].pic %>"/>
+                            <div class="player-name"><%= user.team[i].name %></div>
+                            <div class="player-count s<%= user.team[i].id %>" id="t1p<%= i %>s">0</div>
+                        </div>
+                        <div class="gameIcon pull-right" id="t2p<%= i %>">
+                            <img class="img-circle" src="<%= opponent.team[i].pic %>"/>
+                            <div class="player-name"><%= opponent.team[i].name %></div>
+                            <div class="player-count s<%= opponent.team[i].id %>" id="t2p<%= i %>s">0</div>
+                        </div>
                     </div>
-                    <div class="gameIcon pull-right" id="t2p<%= i %>">
-                        <img class="img-circle" src="<%= opponent.team[i].pic %>"/>
-                        <div class="player-name"><%= opponent.team[i].name %></div>
-                        <div class="player-count s<%= opponent.team[i].id %>" id="t2p<%= i %>s">0</div>
+                    </a>
                     </div>
+                    <div id="div<%= i %>" class="panel-collapse collapse">
+                        <h2>Hello World</h2>
+                    </div>
+                    <% } %>
                 </div>
-                <% } %>
             </div>
         </div>
     </div>
