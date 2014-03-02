@@ -71,7 +71,7 @@ exports.leaderboard = function(req, res){
             var collection = db.collection('user');
             collection.find().sort({winStreak: -1}).limit(10).toArray(function(err, items) {
                 console.log(items);
-                res.render('leaderboard', {items: items});
+                res.render('leaderboard', {items: items, user: req.user});
             });
         }
         else {
