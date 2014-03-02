@@ -229,7 +229,7 @@ img.bg {
     -webkit-transition: opacity 0.2s ease;
     -moz-transition: opacity 0.2s ease;
     -o-transition: opacity 0.2s ease;
-    opacity: 0.7;
+    opacity: 0.5;
 }
 
 .fadeOut:hover {
@@ -238,14 +238,7 @@ img.bg {
     -moz-transition: opacity 0.2s ease;
     -o-transition: opacity 0.2s ease;
     opacity: 1.0;
-}
-
-.gameIcon img {
-    transition: opacity 0.2s ease;
-    -webkit-transition: opacity 0.2s ease;
-    -moz-transition: opacity 0.2s ease;
-    -o-transition: opacity 0.2s ease;
-    opacity: 1.0;
+    cursor: pointer;
 }
 
 .leaderboard td , .leaderboard th{

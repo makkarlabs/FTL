@@ -40,43 +40,43 @@ $(document).ready(function() {
 
         if(t1p0 > t2p0) {
             t1S++;
-            $('#t2p0 img').addClass('fadeOut');
+            $('#t2p0').find('img').addClass('fadeOut');
         }
         else if(t1p0 < t2p0) {
             t2S++;
-            $('#t1p0 img').addClass('fadeOut');
+            $('#t1p0').find('img').addClass('fadeOut');
         }
         if(t1p1 > t2p1) {
             t1S++;
-            $('#t2p1 img').addClass('fadeOut');
+            $('#t2p1').find('img').addClass('fadeOut');
         }
         else if(t1p1 < t2p1) {
             t2S++;
-            $('#t1p1 img').addClass('fadeOut');
+            $('#t1p1').find('img').addClass('fadeOut');
         }
         if(t1p2 > t2p2) {
             t1S++;
-            $('#t2p2 img').addClass('fadeOut');
+            $('#t2p2').find('img').addClass('fadeOut');
         }
         else if(t1p2 < t2p2) {
             t2S++;
-            $('#t1p2 img').addClass('fadeOut');
+            $('#t1p2').find('img').addClass('fadeOut');
         }
         if(t1p3 > t2p3) {
             t1S++;
-            $('#t2p3 img').addClass('fadeOut');
+            $('#t2p3').find('img').addClass('fadeOut');
         }
         else if(t1p3 < t2p3) {
             t2S++;
-            $('#t1p3 img').addClass('fadeOut');
+            $('#t1p3').find('img').addClass('fadeOut');
         }
         if(t1p4 > t2p4) {
             t1S++;
-            $('#t2p4 img').addClass('fadeOut');
+            $('#t2p4').find('img').addClass('fadeOut');
         }
         else if(t1p4 < t2p4) {
             t2S++;
-            $('#t1p4 img').addClass('fadeOut');
+            $('#t1p4').find('img').addClass('fadeOut');
         }
         
         var text = t1S + ' - ' + t2S;
