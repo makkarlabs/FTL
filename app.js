@@ -289,7 +289,7 @@ app.io.route('ready', function(req) {
     roomPlayers = roomPlayers.filter(function(value, index, self){return self.indexOf(value) === index});
     console.log(roomPlayers);
     for(var i in roomPlayers){
-      players[roomPlayers[i]].linkRooms.push(this_room);
+      players[roomPlayers[i]].linkRooms.push(rno);
     }
 
     rooms[rno].broadcast('startgame');
@@ -383,9 +383,8 @@ startStream();
 
 function sendToRooms(player){
   for(var i in player.linkRooms){
-    if(!player.linkRooms[i].gameover)
-    {
-      sendToRoom(player.linkRooms[i], player);
+    if(!rooms[player.linkRooms[i]].gameover){
+      sendToRoom(rooms[player.linkRooms[i]], player);
     }
   }
 }
