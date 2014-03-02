@@ -5,6 +5,7 @@
 
 body {
     padding-top: 55px;
+    background-image: url('../fonts/football.png');    
 }
 
 img.bg {
@@ -150,7 +151,12 @@ img.bg {
 }
 
 .center {
-    text-align: center;
+    text-align: center;    
+}
+
+.center-align {
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .plFont {
@@ -370,4 +376,8 @@ img.bg {
     text-decoration: none;
     margin: 5px;
     
+}
+
+.leaderboard {
+    width: 400px;
 }

@@ -188,8 +188,20 @@ function counter(data) {
       mongo.connect(DB_HOSTNAME, function(err, db) {
         if(!err) {
           var collection = db.collection('user');
-          collection.update({id:data.p1req.session.passport.user.id}, {$inc:{winStreak: 1}}, {w:1}, function(err, result) {});
-          collection.update({id:data.p2req.session.passport.user.id}, {$set:{winStreak: 0}}, {w:1}, function(err, result) {});
+          if(data.p1req.session.passport.user.lastFive.length >= 5){
+            data.p1req.session.passport.user.lastFive = data.p1req.session.passport.user.lastFive.splice(0,1);
+            data.p1req.session.passport.user.lastFive.push("W");
+          } else {
+            data.p1req.session.passport.user.lastFive.push("W");
+          }
+          if(data.p2req.session.passport.user.lastFive.length >= 5){
+            data.p2req.session.passport.user.lastFive = data.p2req.session.passport.user.lastFive.splice(0,1);
+            data.p2req.session.passport.user.lastFive.push("L");
+          } else {
+            data.p2req.session.passport.user.lastFive.push("L");
+          }
+          collection.update({id:data.p1req.session.passport.user.id}, {$inc:{winStreak: 1}, $set:{lastFive: data.p1req.session.passport.user.lastFive}}, {w:1}, function(err, result) {});
+          collection.update({id:data.p2req.session.passport.user.id}, {$set:{winStreak: 0}, $set:{lastFive: data.p2req.session.passport.user.lastFive}}, {w:1}, function(err, result) {});
         }
       });
     }
@@ -198,11 +210,46 @@ function counter(data) {
       mongo.connect(DB_HOSTNAME, function(err, db) {
         if(!err) {
           var collection = db.collection('user');
-          collection.update({id:data.p2req.session.passport.user.id}, {$inc:{winStreak: 1}}, {w:1}, function(err, result) {});
-          collection.update({id:data.p1req.session.passport.user.id}, {$set:{winStreak: 0}}, {w:1}, function(err, result) {});
+          if(data.p1req.session.passport.user.lastFive.length >= 5){
+            data.p1req.session.passport.user.lastFive = data.p1req.session.passport.user.lastFive.splice(0,1);
+            data.p1req.session.passport.user.lastFive.push("L");
+          } else {
+            data.p1req.session.passport.user.lastFive.push("L");
+          }
+          if(data.p2req.session.passport.user.lastFive.length >= 5){
+            data.p2req.session.passport.user.lastFive = data.p2req.session.passport.user.lastFive.splice(0,1);
+            data.p2req.session.passport.user.lastFive.push("W");
+          } else {
+            data.p2req.session.passport.user.lastFive.push("W");
+          }
+          collection.update({id:data.p2req.session.passport.user.id}, {$inc:{winStreak: 1}, $set:{lastFive: data.p1req.session.passport.user.lastFive}}, {w:1}, function(err, result) {});
+          collection.update({id:data.p1req.session.passport.user.id}, {$set:{winStreak: 0}, $set:{lastFive: data.p2req.session.passport.user.lastFive}}, {w:1}, function(err, result) {});
+        }
+      });
+    } else {
+      console.log("Draw");
+      mongo.connect(DB_HOSTNAME, function(err, db) {
+        if(!err) {
+          var collection = db.collection('user');
+          if(data.p1req.session.passport.user.lastFive.length >= 5){
+            data.p1req.session.passport.user.lastFive = data.p1req.session.passport.user.lastFive.splice(0,1);
+            data.p1req.session.passport.user.lastFive.push("D");
+          } else {
+            data.p1req.session.passport.user.lastFive.push("D");
+          }
+          if(data.p2req.session.passport.user.lastFive.length >= 5){
+            data.p2req.session.passport.user.lastFive = data.p2req.session.passport.user.lastFive.splice(0,1);
+            data.p2req.session.passport.user.lastFive.push("D");
+          } else {
+            data.p2req.session.passport.user.lastFive.push("D");
+          }
+          collection.update({id:data.p1req.session.passport.user.id}, {$set:{lastFive: data.p1req.session.passport.user.lastFive}}, {w:1}, function(err, result) {});
+          collection.update({id:data.p2req.session.passport.user.id}, {$set:{lastFive: data.p2req.session.passport.user.lastFive}}, {w:1}, function(err, result) {});
         }
       });
     }
+    /*console.log("player1 last 5");
+    console.log(data.p1req.session.passport.user.lastFive)*/ 
   } else {
     data.timer--;
     data.broadcast('timer',{time: data.timer});
