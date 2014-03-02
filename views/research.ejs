@@ -1,0 +1,30 @@
+<html>
+<head>
+    <title>Fantasy Tweet League</title>
+    <link href="/stylesheets/bootstrap.css" rel="stylesheet">
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script type="text/javascript" src="/javascripts/bootstrap.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script type="text/javascript">
+var io = io.connect();
+
+io.emit('research');
+
+io.on('newtweet', function(data){
+    $("#"+data.name).html(+$("#"+data.name).html() + 1)
+});
+</script>
+
+</head>
+<body>
+
+<% for(var i = 0; i < players.length; i++) { %>
+    <%= players[i].name %> : <span id="<%= players[i].name %>">0</span><br />
+<% } %>
+
+
+
+</body>
+</html>

@@ -22,6 +22,7 @@ var twitter = require('ntwitter');
 //Initialize player sockets
 for(var i = 0; i < players.length; i++){
   players[i].linkRooms = [];
+  players[i].sendsocket = null;
 }
 
 // all environments
@@ -54,7 +55,8 @@ app.get('/afterlogin', ensureLoggedIn('/login'), routes.afterlogin);
 app.get('/wait', ensureLoggedIn('/login'), routes.wait);
 app.post('/teamSelect', ensureLoggedIn('/login'), routes.teamselect);
 app.get('/leaderboard', routes.leaderboard);
-app.post('/chooseSquad', routes.choosesquad)
+app.post('/chooseSquad', routes.choosesquad);
+app.get('/research', routes.research);
 app.post('/battle', ensureLoggedIn('login'), function(req, res) {
   var this_room = rooms[+req.body.room];
   req.session.rno = +req.body.room;
@@ -331,6 +333,12 @@ app.io.route('ready', function(req) {
 
 });
 
+app.io.route('research', function(req){
+  for(var i in players) {
+    players[i].sendsocket = req.io;
+  }
+});
+
 
 //NTwitter
 //console.log(config.TWITTER_CONSUMER_KEY)
@@ -417,6 +425,9 @@ function sendToRooms(player){
     if(!rooms[player.linkRooms[i]].gameover){
       sendToRoom(rooms[player.linkRooms[i]], player);
     }
+  }
+  if(player.sendsocket != undefined) {
+    player.sendsocket.emit('newtweet',{id: player.id, name: player.name});
   }
 }
 

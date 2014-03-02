@@ -107,3 +107,7 @@ exports.choosesquad = function(req, res){
         res.redirect('/wait');
     }
 }
+
+exports.research = function(req, res){ 
+    res.render('research', {players: players.players});
+}
