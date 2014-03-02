@@ -8,7 +8,7 @@ var players = require('../players');
 var updateUser = require('../app');
 
 exports.index = function(req, res){
-  res.redirect('/pick');
+  res.redirect('/afterlogin');
   //res.render('login', { title: 'Fantasy Tweet League | Login with Twitter', user: req.user, reqd: true });
 
 };
