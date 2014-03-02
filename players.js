@@ -30,11 +30,11 @@ module.exports = {
     {name : "Hazard", pic:"http://img.skysports.com/13/05/247x247/Eden-Hazard-Chelsea-Europa-League_2944692.jpg", handle : "hazardeden10", cost : 20, id: 28, sname: "hazard"},
     {name : "Gotze", pic:"https://pbs.twimg.com/profile_images/378800000384811522/67c7ced6a8ebc0ce57fbbc2f9bc8e555.jpeg", handle : "MarioGoetze", cost : 10, id: 29, sname: "gotze"},
     {name : "Falcao", pic:"http://www.correodelorinoco.gob.ve/wp-content/uploads/2013/10/Radamel-Falcao.jpg", handle : "FALCAO", cost : 20, id: 30, sname: "falcao"},
-    {name : "Juan Mata", pic:"http://theoriginalwinger.com/wp-content/uploads/2014/01/Juan-Mata.jpg", handle : "juanmata8", cost : 20, id: 31, sname: "juan mata"},
+    {name : "Juan Mata", pic:"http://img.uefa.com/imgml/TP/players/14/2013/324x324/104584.jpg", handle : "juanmata8", cost : 20, id: 31, sname: "juan mata"},
     {name : "Kagawa", pic:"https://pbs.twimg.com/profile_images/2550070556/C7H5IIp4", handle : "evilkagawa", cost : 40, id: 32, sname: "kagawa"},
-    {name : "Torres", pic:"http://i53.tinypic.com/sg4lzt.jpg", handle : "Torres", cost : 10, id: 33, sname: "torres"}
-    /*{name : "", pic:"", handle : "", cost : 0, id: 34, sname: ""},
-    {name : "", pic:"", handle : "", cost : 0, id: 35, sname: ""},
+    {name : "Torres", pic:"http://img.uefa.com/imgml/TP/players/1/2014/324x324/58686.jpg", handle : "Torres", cost : 10, id: 33, sname: "torres"},
+    {name : "Oscar", pic:"http://img.uefa.com/imgml/TP/players/14/2013/324x324/250053633.jpg", handle : "Oficial1OOscar", cost : 40, id: 34, sname: "oscar"}
+    /*{name : "", pic:"", handle : "", cost : 0, id: 35, sname: ""},
     {name : "", pic:"", handle : "", cost : 0, id: 36, sname: ""},
     {name : "", pic:"", handle : "", cost : 0, id: 37, sname: ""},
     {name : "", pic:"", handle : "", cost : 0, id: 38, sname: ""},
