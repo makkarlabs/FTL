@@ -112,18 +112,46 @@
                     alert('Choose 5 players to complete the selection');
                 }
                 else{
-                    for(var i=0;i<5;i++){
+                    /*for(var i=0;i<5;i++){
                         var value = $("#"+i+".player-selected").attr("player-id");
                         var formid = i+1;
                         $("#player-form #"+formid).val(value);
-                    }
-                    var j = 3;
-                    while(j--) {
-                        var value = $("#"+i+".player-selected").attr("player-id");
-                        formid = i+1;
-                        i++;
-                        $("#player-form #"+formid).val(value);
-                    }
+                    }*/
+                    /*var j = 3;
+                    var value = $(".player-unselected").attr("id");*/
+
+                        var formid = 0;
+                        pArray = [];
+                        sArray = [];
+                        $(".player-unselected").each(function() {
+                            pArray.push($(this).attr("id"));
+                        });
+                        $(".player-selected").each(function() {
+                            sArray.push($(this).attr("player-id"));
+                        });
+                        var diff = [];
+                        var i = 0;
+                        jQuery.grep(pArray, function(el) {
+                            if (jQuery.inArray(el, sArray) == -1) diff.push(el);
+                            i++;
+                        });
+                        fArray = sArray.concat(diff);
+
+                        formid++;
+                        $("#player-form #"+formid).val($(this).attr("id"));
+                        for(var i=0;i<8;i++){
+                            /*var value = $("#"+i+".player-selected").attr("player-id");*/
+                            var formid = i+1;
+                            $("#player-form #"+formid).val(fArray[i]);
+                        }
+
+                    /*while(j--) {
+
+formid++;
+                            $("#player-form #"+formid).val($(this).attr("id"));
+                        formid = value[3-j];
+                        $("#player-form #"+formid).val(formid);
+                    }*/
                     $("#player-form").submit();
                 }
             });
