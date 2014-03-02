@@ -199,6 +199,12 @@ img.bg {
     border-radius: 30px;
 }
 
+.gameSpace {
+    background: rgba(230, 230, 230, 0.5);
+    border-radius: 20px;
+    padding: 10px 40px;
+}
+
 .fadeOut {
     transition: opacity 0.2s ease;
     -webkit-transition: opacity 0.2s ease;
