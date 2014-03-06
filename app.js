@@ -71,7 +71,7 @@ app.post('/battle', ensureLoggedIn('login'), function(req, res) {
   }
 });
 
-app.listen(app.get('port'))
+app.listen(app.get('port'));
 /*var eserver = http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
@@ -100,48 +100,51 @@ passport.use(new TwitterStrategy({
   function(token, tokenSecret, profile, done) {
     var this_user;
     // NOTE: You'll probably want to associate the Twitter profile with a
-    //       user record in your application's DB.    
-    mongo.connect(DB_HOSTNAME, function(err, db) {
-      if(!err) {
+    //       user record in your application's DB.
            
-        var collection = db.collection('user');
+    var collection = app.get('dbuser');
 
-        collection.find({id:profile.id}).toArray(function(err, items) {
-            if(items.length == 0) {
-              this_user = {id: profile.id, username: profile.username, displayName: profile.displayName, 
-                team: [], transfer: false, winStreak: 0, lastFive: []};
-              if(profile.photos.length > 0) {
-                this_user.photo = profile.photos[0]["value"];
-              } 
-              collection.insert(this_user,{w:1}, function(err, result) {});
-              done(null, this_user)
-            } else {
-              this_user = items[0];
-              this_user.username = profile.username;
-              this_user.displayName = profile.displayName;            
-              if(profile.photos.length > 0) {
-                this_user.photo = profile.photos[0]["value"];
-              } 
-              collection.update({id:profile.id}, {$set:{username: this_user.username, displayName: this_user.displayName, photo: this_user.photo}}, {w:1}, function(err, result) {});         
-              done(null, this_user)   
-            }
-        });
-        
-      } else  {
-        console.log("some problem with the db");
-      }
-    });    
+    collection.find({id:profile.id}).toArray(function(err, items) {
+        if(items.length == 0) {
+          this_user = {id: profile.id, username: profile.username, displayName: profile.displayName, team: [], transfer: false, winStreak: 0, lastFive: []};
+          if(profile.photos.length > 0) {
+            this_user.photo = profile.photos[0]["value"];
+          } 
+          collection.insert(this_user,{w:1}, function(err, result) {});
+          done(null, this_user)
+        } else {
+          this_user = items[0];
+          this_user.username = profile.username;
+          this_user.displayName = profile.displayName;
+          if(profile.photos.length > 0) {
+            this_user.photo = profile.photos[0]["value"];
+          } 
+          collection.update({id:profile.id}, {$set:{username: this_user.username, displayName: this_user.displayName, photo: this_user.photo}}, {w:1}, function(err, result) {});         
+          done(null, this_user);   
+        }
+    });
   }
 ));
 
 app.get('/auth/twitter', passport.authenticate('twitter'));
 app.get('/auth/twitter/callback', passport.authenticate('twitter', { successReturnToOrRedirect: '/afterlogin', failureRedirect: '/login' }));
 
+// Creating a Global DB Variable
+
+mongo.connect(DB_HOSTNAME, function(err, db) {
+    if(!err) {
+      var collection = db.collection('user');
+      app.set("dbuser", collection);
+    } else {
+      console.log("Mongo Error!");
+    }
+  });
+
 
 // Sockets the new way
 
 var userWaiting = null;
-var rooms = []
+var rooms = [];
 
 app.io.route('imwaiting', function(req){
   //console.log('imwaiting');
@@ -186,101 +189,75 @@ function counter(data) {
     }
 
 
-    mongo.connect(DB_HOSTNAME, function(err, db) {
-        if(!err) {
-          var collection = db.collection('user');
+    var collection = app.get('dbuser');
 
-          collection.find({id:data.p1req.session.passport.user.id}).toArray(function(err, items) {
-            data.p1req.session.passport.user.lastFive = items[0].lastFive;
-          });
+    collection.find({id:data.p1req.session.passport.user.id}).toArray(function(err, items) {
+      data.p1req.session.passport.user.lastFive = items[0].lastFive;
+    });
 
 
-          collection.find({id:data.p2req.session.passport.user.id}).toArray(function(err, items) {
-            data.p2req.session.passport.user.lastFive = items[0].lastFive;
-          });
+    collection.find({id:data.p2req.session.passport.user.id}).toArray(function(err, items) {
+      data.p2req.session.passport.user.lastFive = items[0].lastFive;
+    });
 
-          
-          if(p1s > p2s){
-            console.log("p1 wins");
-
-            mongo.connect(DB_HOSTNAME, function(err, db) {
-              if(!err) {
-                var collection = db.collection('user');
-
-
-                if(data.p1req.session.passport.user.lastFive.length >= 5){
-                  data.p1req.session.passport.user.lastFive = data.p1req.session.passport.user.lastFive.splice(1,4);
-                  data.p1req.session.passport.user.lastFive.push("W");
-                } else {
-                  data.p1req.session.passport.user.lastFive.push("W");
-                }
-                if(data.p2req.session.passport.user.lastFive.length >= 5){
-                  data.p2req.session.passport.user.lastFive = data.p2req.session.passport.user.lastFive.splice(1,4);
-                  data.p2req.session.passport.user.lastFive.push("L");
-                } else {
-                  data.p2req.session.passport.user.lastFive.push("L");
-                }
-                console.log("last five" + data.p1req.session.passport.user.lastFive);
-                console.log("last five" + data.p2req.session.passport.user.lastFive);
-                collection.update({id:data.p1req.session.passport.user.id}, {$inc:{winStreak: 1}, $set:{lastFive: data.p1req.session.passport.user.lastFive}}, {w:1}, function(err, result) {});
-                collection.update({id:data.p2req.session.passport.user.id}, {$set:{winStreak: 0}, $set:{lastFive: data.p2req.session.passport.user.lastFive}}, {w:1}, function(err, result) {});
-              }
-            });
-          }
-          else if(p2s > p1s){
-            console.log("p2 wins");
-            mongo.connect(DB_HOSTNAME, function(err, db) {
-              if(!err) {
-                var collection = db.collection('user');
-                if(data.p1req.session.passport.user.lastFive.length >= 5){
-                  data.p1req.session.passport.user.lastFive = data.p1req.session.passport.user.lastFive.splice(1,4);
-                  data.p1req.session.passport.user.lastFive.push("L");
-                } else {
-                  data.p1req.session.passport.user.lastFive.push("L");
-                }
-                if(data.p2req.session.passport.user.lastFive.length >= 5){
-                  data.p2req.session.passport.user.lastFive = data.p2req.session.passport.user.lastFive.splice(1,4);
-                  data.p2req.session.passport.user.lastFive.push("W");
-                } else {
-                  data.p2req.session.passport.user.lastFive.push("W");
-                }
-                console.log("last five" + data.p1req.session.passport.user.lastFive);
-                console.log("last five" + data.p2req.session.passport.user.lastFive);
-                collection.update({id:data.p1req.session.passport.user.id}, {$inc:{winStreak: 1}, $set:{lastFive: data.p1req.session.passport.user.lastFive}}, {w:1}, function(err, result) {});
-                collection.update({id:data.p2req.session.passport.user.id}, {$set:{winStreak: 0}, $set:{lastFive: data.p2req.session.passport.user.lastFive}}, {w:1}, function(err, result) {});
-              }
-            });
-          } else {
-            console.log("Draw");
-            mongo.connect(DB_HOSTNAME, function(err, db) {
-              if(!err) {
-                var collection = db.collection('user');
-                if(data.p1req.session.passport.user.lastFive.length >= 5){
-                  data.p1req.session.passport.user.lastFive = data.p1req.session.passport.user.lastFive.splice(1,4);
-                  data.p1req.session.passport.user.lastFive.push("D");
-                } else {
-                  data.p1req.session.passport.user.lastFive.push("D");
-                }
-                if(data.p2req.session.passport.user.lastFive.length >= 5){
-                  data.p2req.session.passport.user.lastFive = data.p2req.session.passport.user.lastFive.splice(1,4);
-                  data.p2req.session.passport.user.lastFive.push("D");
-                } else {
-                  data.p2req.session.passport.user.lastFive.push("D");
-                }
-                console.log("last five" + data.p1req.session.passport.user.lastFive);
-                console.log("last five" + data.p2req.session.passport.user.lastFive);
-                collection.update({id:data.p1req.session.passport.user.id}, {$set:{lastFive: data.p1req.session.passport.user.lastFive}}, {w:1}, function(err, result) {});
-                collection.update({id:data.p2req.session.passport.user.id}, {$set:{lastFive: data.p2req.session.passport.user.lastFive}}, {w:1}, function(err, result) {});
-              }
-            });
-          }
-          
-        }else{
-          console.log("db error");
-        }
-      });
-
-
+    
+    if(p1s > p2s){
+      console.log("p1 wins");
+      if(data.p1req.session.passport.user.lastFive.length >= 5){
+        data.p1req.session.passport.user.lastFive = data.p1req.session.passport.user.lastFive.splice(1,4);
+        data.p1req.session.passport.user.lastFive.push("W");
+      } else {
+        data.p1req.session.passport.user.lastFive.push("W");
+      }
+      if(data.p2req.session.passport.user.lastFive.length >= 5){
+        data.p2req.session.passport.user.lastFive = data.p2req.session.passport.user.lastFive.splice(1,4);
+        data.p2req.session.passport.user.lastFive.push("L");
+      } else {
+        data.p2req.session.passport.user.lastFive.push("L");
+      }
+      console.log("last five" + data.p1req.session.passport.user.lastFive);
+      console.log("last five" + data.p2req.session.passport.user.lastFive);
+      collection.update({id:data.p1req.session.passport.user.id}, {$inc:{winStreak: 1}, $set:{lastFive: data.p1req.session.passport.user.lastFive}}, {w:1}, function(err, result) {});
+      collection.update({id:data.p2req.session.passport.user.id}, {$set:{winStreak: 0}, $set:{lastFive: data.p2req.session.passport.user.lastFive}}, {w:1}, function(err, result) {});
+    }
+    else if(p2s > p1s){
+      console.log("p2 wins");
+      if(data.p1req.session.passport.user.lastFive.length >= 5){
+        data.p1req.session.passport.user.lastFive = data.p1req.session.passport.user.lastFive.splice(1,4);
+        data.p1req.session.passport.user.lastFive.push("L");
+      } else {
+        data.p1req.session.passport.user.lastFive.push("L");
+      }
+      if(data.p2req.session.passport.user.lastFive.length >= 5){
+        data.p2req.session.passport.user.lastFive = data.p2req.session.passport.user.lastFive.splice(1,4);
+        data.p2req.session.passport.user.lastFive.push("W");
+      } else {
+        data.p2req.session.passport.user.lastFive.push("W");
+      }
+      console.log("last five" + data.p1req.session.passport.user.lastFive);
+      console.log("last five" + data.p2req.session.passport.user.lastFive);
+      collection.update({id:data.p1req.session.passport.user.id}, {$inc:{winStreak: 1}, $set:{lastFive: data.p1req.session.passport.user.lastFive}}, {w:1}, function(err, result) {});
+      collection.update({id:data.p2req.session.passport.user.id}, {$set:{winStreak: 0}, $set:{lastFive: data.p2req.session.passport.user.lastFive}}, {w:1}, function(err, result) {});
+    } else {
+      console.log("Draw");
+      var collection = db.collection('user');
+      if(data.p1req.session.passport.user.lastFive.length >= 5){
+        data.p1req.session.passport.user.lastFive = data.p1req.session.passport.user.lastFive.splice(1,4);
+        data.p1req.session.passport.user.lastFive.push("D");
+      } else {
+        data.p1req.session.passport.user.lastFive.push("D");
+      }
+      if(data.p2req.session.passport.user.lastFive.length >= 5){
+        data.p2req.session.passport.user.lastFive = data.p2req.session.passport.user.lastFive.splice(1,4);
+        data.p2req.session.passport.user.lastFive.push("D");
+      } else {
+        data.p2req.session.passport.user.lastFive.push("D");
+      }
+      console.log("last five" + data.p1req.session.passport.user.lastFive);
+      console.log("last five" + data.p2req.session.passport.user.lastFive);
+      collection.update({id:data.p1req.session.passport.user.id}, {$set:{lastFive: data.p1req.session.passport.user.lastFive}}, {w:1}, function(err, result) {});
+      collection.update({id:data.p2req.session.passport.user.id}, {$set:{lastFive: data.p2req.session.passport.user.lastFive}}, {w:1}, function(err, result) {});
+    }
     /*console.log("player1 last 5");
     console.log(data.p1req.session.passport.user.lastFive)*/ 
   } else {
@@ -442,83 +419,3 @@ function sendToRoom(room,player){
   }
   room.broadcast('newtweet',{id: player.id, name: player.name});
 }
-
-//Socket.io
-/*var io = require('socket.io').listen(eserver);
-var playerWaiting = null;
-var rooms = [];
-
-io.sockets.on('connection', function(socket) {
-
-
-    socket.on('wait', function(data) {      
-      socket.twitter_id = data.twitter_id;
-      if(playerWaiting != null && playerWaiting.socket.connected == true) {
-        startGame(socket, playerWaiting); 
-        playerWaiting = null;
-      } else {
-        playerWaiting = socket;
-      }
-    });
-
-    socket.on('gameready', function(data) {
-      socket.twitter_id = data.twitter_id;
-      var this_room =  rooms[data.room];
-
-      if(data.player == 1 && data.twitter_id == this_room.p1tid) {
-        this_room.p1ready = true;
-        this_room.p1sock = socket;        
-      } else if (data.twitter_id == this_room.p2tid) {
-        this_room.p2ready = true;
-        this_room.p2sock = socket;        
-      }
-
-      if (this_room.p1ready && this_room.p2ready) {
-        getPlayers(this_room);
-      }
-          
-    });    
-
-});
-
-function startGame(p1sock, p2sock) {
-  var current_room = {p1tid: p1sock.twitter_id, p2tid: p2sock.twitter_id, id:rooms.length, 
-    p1ready: false, p2ready: false, gameover:false};
-  rooms.push(current_room);
-
-  p1sock.emit('battle',{room:current_room.id, player: 1});
-  p2sock.emit('battle',{room:current_room.id, player: 2});
-
-}
-
-function getPlayers(this_room) {
-  var p1sock = this_room.p1sock;
-  var p2sock = this_room.p2sock;
-   mongo.connect(DB_HOSTNAME, function(err, db) {
-      if(!err) {           
-        var collection = db.collection('user');
-        collection.find({id:p1sock.twitter_id}).toArray(function(err, items) {
-          p1sock.players = items[0].players;
-          collection.find({id:p2sock.twitter_id}).toArray(function(err, items) {
-            p2sock.players = items[0].players;
-            registerRoom(this_room);
-          });
-        });
-      }
-    });
-}
-
-function registerRoom(this_room) {
-  this_room.p1sock.emit('startgame');
-  this_room.p2sock.emit('startgame');
-
-  setInterval(function(){
-    this_room.gameover = true; 
-  }, 60000);
-
-  var roomPlayers = this_room.p1sock.players.slice(0, 5).concat(this_room.p2sock.players.slice(0, 5));
-  roomPlayers = roomPlayers.filter(function(value, index, self){return self.indexOf(value) === index});
-  for (var this_player in roomPlayers) {
-    players.players[this_player].linkRooms.push(this_room); 
-  }
-}*/
