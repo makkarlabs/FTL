@@ -28,6 +28,13 @@
                         <div class="player-name"><%= user.team[i].name %></div>
                         <div class="player-count s<%= user.team[i].id %>" id="t1p<%= i %>s">0</div>
                     </div>
+                    <div class="gameIcon" id="t1t2v<%= i %>">
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-success t1p<%= user.team[i].id %>" style="width: 100%;">
+                            </div>
+                            <div class="progress-bar progress-bar-danger t2p<%= user.team[i].id %>" style="width: 0%;"></div>
+                        </div>
+                    </div>
                     <div class="gameIcon pull-right" id="t2p<%= i %>">
                         <img class="img-circle" src="<%= opponent.team[i].pic %>"/>
                         <div class="player-name"><%= opponent.team[i].name %></div>

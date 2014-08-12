@@ -19,6 +19,7 @@ $(document).ready(function() {
             var count = $('.s' + data.id).html();
             count++;
             $('.s' + data.id).html(count);
+            $('.t1p' + data.id).css('width', ())
         });
 
         io.on('gameover', function(data){

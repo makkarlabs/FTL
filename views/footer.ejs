@@ -1,3 +1,40 @@
+<% if(user && reqd) { %>
+    <script type="text/javascript">
+        
+        /*$(function() {
+            var pics = ['img0', 'img1', 'img2', 'img3'];
+            var i = 0;
+            var bodyTag = $('body.navOn');
+            function moveBg() {
+                var pos = parseInt($('body.navOn').css('background-position'));
+                if(pos == undefined) {
+                    moveBg();
+                } else {
+                    pos++;
+                    console.log(pos);
+                    bodyTag.css('background-position', pos);
+                }
+            }
+            var bgMove = window.setInterval(moveBg, 110);
+            var bgSwitch = window.setInterval(function() {
+                window.clearInterval(bgMove);
+                bodyTag.removeClass('img' + String(i++ % 4)).addClass('img' + String(i % 4));
+                //bodyTag.css('background-image', 'url(\'../img/' + pics[i++ % 4] + '\')');
+                //bodyTag.css('background-position', 'center');
+                bgMove = window.setInterval(moveBg, 110);
+            }, 10000);
+            
+        });*/
+    </script>
+<% } else { %>
+    <script type="text/javascript">
+        $(function() {
+            $(window).scroll(function() {
+                $('div.picDiv').css('background-position', '50% ' + $(window).scrollTop() / 2 + 'px');
+            });
+        });
+    </script>
+<% } %>
 </body>
 
 </html>
