@@ -1,4 +1,5 @@
 <% if(user && reqd) { %>
+</div>
     <script type="text/javascript">
         
         /*$(function() {
@@ -6,7 +7,7 @@
             var i = 0;
             var bodyTag = $('body.navOn');
             function moveBg() {
-                var pos = parseInt($('body.navOn').css('background-position'));
+                var pos = parseInt(bodyTag.css('background-position'));
                 if(pos == undefined) {
                     moveBg();
                 } else {

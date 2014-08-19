@@ -3,6 +3,11 @@
     src: url('../fonts/Barclays Premier League.ttf');
 }
 
+body {
+    padding-top: 65px;
+    padding-bottom: 65px;
+}
+
 .picDiv {
     width: 100%;
     height: 100%;
@@ -10,56 +15,96 @@
     background-size: cover;
 }
 
-body.navOn {
-    padding-top: 65px;
-    /*background-image: url('../img/stamfordBridgeAerial.jpg');*/
-    background-size: cover;
+#bgDiv {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
 }
 
-.img0 {
-    background-image: url('../img/allianzArenaRed.jpg');
-    transition: background-image 1s linear;
-}
-.img1 {
-    background-image: url('../img/AllianzArenaWide.jpg');
-    transition: background-image 1s linear;
-}
-.img2 {
-    background-image: url('../img/emirates-by-night.jpg');
-    transition: background-image 1s linear;
-}
-.img3 {
-    background-image: url('../img/stamfordBridgeAerial.jpg');
-    transition: background-image 1s linear;
-}
-
-img.hide {
-    height: 0;
-    width: 0;
+@-webkit-keyframes bgChange {
+    0% {
+        opacity: 1;
+    }
+    17% {
+        opacity: 1;
+    }
+    25% {
+        opacity: 0;
+    }
+    92% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }
 
-img.bg {
-  /* Set rules to fill background */
+#bgDiv img.bgImg {
+    -webkit-animation-name: bgChange;
+    -webkit-animation-timing-function: ease-in-out;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-duration: 240s;
+    
+    animation-name: bgChange;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    animation-duration: 240s;
+}
+
+#bgDiv img:nth-of-type(1) {
+    -webkit-animation-delay: 180s;
+    animation-delay: 180s;
+}
+
+#bgDiv img:nth-of-type(2) {
+    -webkit-animation-delay: 120s;
+    animation-delay: 120s;
+}
+
+#bgDiv img:nth-of-type(3) {
+    -webkit-animation-delay: 60s;
+    animation-delay: 60s;
+}
+
+#bgDiv img:nth-of-type(4) {
+    -webkit-animation-delay: 0;
+    animation-delay: 0s;
+}
+
+.bgImg {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    z-index: -10;
+    opacity: 1;
+    position: fixed;
+    left: 0;
+    top: 0;
+    background-repeat: no-repeat;
+    background-size: auto;
+}
+
+/*img.bg {
   min-height: 100%;
   min-width: 1024px;
   z-index: -1;
-  /* Set up proportionate scaling */
   width: 100%;
   height: auto;
     
-  /* Set up positioning */
   position: fixed;
   top: 0;
   left: 0;
 }
 
-@media screen and (max-width: 1024px) { /* Specific to this particular image */
+@media screen and (max-width: 1024px) {
   img.bg {
     left: 50%;
-    margin-left: -512px;   /* 50% */
+    margin-left: -512px;
   }
 }
-
+*/
 
 .player-unselected .player-name{
     padding: 5px;
